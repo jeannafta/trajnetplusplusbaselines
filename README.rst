@@ -48,8 +48,13 @@ Florent Zolliker
     
    .. figure:: docs/train/visualize_avec_tout_scene50876.JPG
    Once more goals directionalmlp and goals directional are the bests
-
-
+   
+   The next image is the result table, but the problem is that we can't change the table case size so the model names are not fully written in the table, so we can't know which one is directionalmlp, occupancy, or directional.
+   
+   .. figure:: docs/train/Results with the bug.JPG
+   
+   
+   
 
 
 
