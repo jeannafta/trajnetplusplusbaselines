@@ -28,7 +28,8 @@ Florent Zolliker
    
    The following scenes show the superiority of the D-grid Model when compared to the Vanilla Model. D-Grid Model follows more closely the primary trajectory. 
    
-   The IDs of the best 3 scenes are: 
+   The IDs of the best 3 scenes are: 50932, 46219, 44259.
+   
    
 
 
