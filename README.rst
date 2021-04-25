@@ -17,6 +17,7 @@ Florent Zolliker
 -----
 
    **1.1 Quantitative Evaluation**
+   
    The following graphs were obtained when training the five_parallel_synth_data using a Vanilla Model & a D-Grid Model:
    
 .. figure:: docs/train/epoch-loss_goals-directionnal.JPG
