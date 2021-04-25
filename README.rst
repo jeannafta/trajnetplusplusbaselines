@@ -38,16 +38,16 @@ Florent Zolliker
    
    We played with the training options to test whiche training was the best one and we chose 3 more test scenes to show results.
       
-    The best 3 new test scenes are:
+   The best 3 new test scenes are:
     
-    .. figure:: docs/train/visualize_avec_tout_scene53383.JPG
-    This first one shows that all except the vanilla are good.
+   .. figure:: docs/train/visualize_avec_tout_scene53383.JPG
+   This first one shows that all except the vanilla are good.
     
-    .. figure:: docs/train/visualize_avec_tout_scene50782.JPG
-    This one shows that the 2 differents goals directionnal models are the bests.
+   .. figure:: docs/train/visualize_avec_tout_scene50782.JPG
+   This one shows that the 2 differents goals directionnal models are the bests.
     
-    .. figure:: docs/train/visualize_avec_tout_scene50876.JPG
-    Once more goals directionalmlp and goals directional are the bests
+   .. figure:: docs/train/visualize_avec_tout_scene50876.JPG
+   Once more goals directionalmlp and goals directional are the bests
 
 
 
