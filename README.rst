@@ -9,7 +9,7 @@ Gaelle Abi Younes
 Jean Naftalski
 Florent Zolliker
 
-1. Comparaison between Vanilla & D-Grid Models
+1. Comparaison between Vanilla, D-Grid, 
 -----
    1.1 Quantitative Evaluation
    The following graphs were obtained when training the five_parallel_synth_data using a Vanilla Model & a D-Grid Model:
@@ -24,8 +24,12 @@ Florent Zolliker
 .. figure:: docs/train/seq-loss_goals-directionnal.JPG
 
    
-
-
+   1.2 Scenes Choice
+   
+   The following scenes show the superiority of the D-grid Model when compared to the Vanilla Model. D-Grid Model follows more closely the primary trajectory. 
+   
+   The IDs of the best 3 scenes are: 
+   
 
 
 
