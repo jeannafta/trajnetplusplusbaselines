@@ -9,9 +9,12 @@ Gaelle Abi Younes
 Jean Naftalski
 Florent Zolliker
 
-
-
-
+1. Comparaison between Vanilla & D-Grid Models
+-----
+   1.1 Quantitative Evaluation
+   The following graphs were obtained when training the five_parallel_synth_data using a Vanilla Model & a D-Grid Model:
+   
+..figure::
 
 
 
