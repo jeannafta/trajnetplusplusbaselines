@@ -57,9 +57,11 @@ Florent Zolliker
    
 2. Comparaison between Vanilla & D-Grid Model using synth_data & real_data
 -----
+After evaluating the Vanilla Model on AICrowd, the following results for the different losses were obtained:
 
+.. figure:: docs/train/vanilla
 
-
+After evaluating the D-Grid Model on AICrowd, the following results for the different losses were obtained:
 
 
 
