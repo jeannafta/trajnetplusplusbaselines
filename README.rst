@@ -5,13 +5,16 @@ TrajNet++ : The Trajectory Forecasting Framework
 Milestone 1
 ==========
 
-Group A:
++-----------------------------+
+| Group A                     | 
++-----------------------------+ 
+| Gaelle Abi Younes           |
++-----------------------------+
+| Jean Naftalski              |  
++-----------------------------+ 
+| Florent Zolliker            |  
++-----------------------------+ 
 
-Gaelle Abi Younes
-
-Jean Naftalski
-
-Florent Zolliker
 
 1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy on five_parallel_synth_data
 -----
