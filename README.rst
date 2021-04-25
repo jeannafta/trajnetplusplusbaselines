@@ -1,5 +1,22 @@
+
 TrajNet++ : The Trajectory Forecasting Framework
 ================================================
+
+Milestone 1
+
+Group A:
+Gaelle Abi Younes
+Jean Naftalski
+Florent Zolliker
+
+
+
+
+
+
+
+
+
 
 PyTorch implementation of `Human Trajectory Forecasting in Crowds: A Deep Learning Perspective <https://arxiv.org/pdf/2007.03639.pdf>`_ 
 
