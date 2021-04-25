@@ -40,11 +40,11 @@ Florent Zolliker
       
     The best 3 new test scenes are:
     
-    .. figure:: docs/train/visualize_scene50932.JPG
+    .. figure:: docs/train/visualize_avec_tout_scene53383.JPG
     
-    .. figure:: docs/train/visualize_scene50932.JPG
+    .. figure:: docs/train/visualize_avec_tout_scene50782.JPG
     
-    .. figure:: docs/train/visualize_scene50932.JPG
+    .. figure:: docs/train/visualize_avec_tout_scene50876.JPG
       
    
    
