@@ -59,7 +59,7 @@ Florent Zolliker
 -----
 After evaluating the Vanilla Model on AICrowd, the following results for the different losses were obtained:
 
-.. figure:: docs/train/vanilla
+.. figure:: docs/train/vanilla.png
 
 After evaluating the D-Grid Model on AICrowd, the following results for the different losses were obtained:
 
