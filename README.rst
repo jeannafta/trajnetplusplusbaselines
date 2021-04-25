@@ -15,6 +15,7 @@ Milestone 1
 | Florent Zolliker            |  
 +-----------------------------+ 
 
+AICrowd Team Name: jeannafta
 
 1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy on five_parallel_synth_data
 -----
