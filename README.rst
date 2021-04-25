@@ -60,10 +60,11 @@ AICrowd Team Name: jeannafta
    
    However, this schene showed that in some cases, the directional MLP model behaves better than the directional LSTM. 
    
-   As for the results of each model:
+   As for the results of each model: (from top to bottom: MLP, Occasional, D-Grid, Vanilla)
    
    .. figure:: docs/train/Results.JPG
    
+   ADD DISCUSSION
    
 2. Comparaison between Vanilla & D-Grid Model using synth_data & real_data
 -----
