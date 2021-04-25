@@ -9,9 +9,9 @@ Gaelle Abi Younes
 Jean Naftalski
 Florent Zolliker
 
-1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy
+1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy on five_parallel_synth_data
 -----
-   1.1 Quantitative Evaluation
+   **1.1 Quantitative Evaluation**
    The following graphs were obtained when training the five_parallel_synth_data using a Vanilla Model & a D-Grid Model:
    
 .. figure:: docs/train/epoch-loss_goals-directionnal.JPG
@@ -24,7 +24,7 @@ Florent Zolliker
 .. figure:: docs/train/seq-loss_goals-directionnal.JPG
 
    
-   1.2 Scenes Choice
+   **1.2 Scenes Choice**
    
    The following scenes show the superiority of the D-grid Model when compared to the Vanilla Model. D-Grid Model follows more closely the primary trajectory. 
    
@@ -55,9 +55,8 @@ Florent Zolliker
    .. figure:: docs/train/Results with the bug.JPG
    
    
-   
-
-
+2. Comparaison between Vanilla & D-Grid Model using synth_data & real_data
+-----
 
 
 
