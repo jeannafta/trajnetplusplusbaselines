@@ -36,7 +36,7 @@ Florent Zolliker
    
    .. figure:: docs/train/visualize_scene44259.JPG
    
-   We played with the training options to test whiche training was the best one and we chose 3 more test scenes to show results.
+   We played with the training options to test which training was the best one and we chose 3 more test scenes to show results.
       
    The best 3 new test scenes are:
     
