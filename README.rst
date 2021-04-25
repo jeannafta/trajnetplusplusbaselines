@@ -60,9 +60,9 @@ AICrowd Team Name: jeannafta
    
    However, this schene showed that in some cases, the directional MLP model behaves better than the directional LSTM. 
    
-   The next image is the result table, but the problem is that we can't change the table case size so the model names are not fully written in the table, so we can't know which one is directionalmlp, occupancy, or directional.
+   As for the results of each model:
    
-   .. figure:: docs/train/Results with the bug.JPG
+   .. figure:: docs/train/Results.JPG
    
    
 2. Comparaison between Vanilla & D-Grid Model using synth_data & real_data
