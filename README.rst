@@ -51,7 +51,7 @@ Florent Zolliker
    
    The next image is the result table, but the problem is that we can't change the table case size so the model names are not fully written in the table, so we can't know which one is directionalmlp, occupancy, or directional.
    
-   .. figure:: docs/train/Results with the bug.JPG
+   .. figure:: docs/train/Results_with_the_bug.JPG
    
    
    
