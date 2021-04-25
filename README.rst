@@ -9,7 +9,7 @@ Gaelle Abi Younes
 Jean Naftalski
 Florent Zolliker
 
-1. Comparaison between Vanilla, D-Grid, 
+1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy
 -----
    1.1 Quantitative Evaluation
    The following graphs were obtained when training the five_parallel_synth_data using a Vanilla Model & a D-Grid Model:
@@ -36,22 +36,23 @@ Florent Zolliker
    
    .. figure:: docs/train/visualize_scene44259.JPG
    
-   We played with the training options to test which training was the best one and we chose 3 more test scenes to show results.
-      
-   The best 3 new test scenes are:
+   We played with the training options to test whiche training was the best one and we chose the following 3 scenes:
     
    .. figure:: docs/train/visualize_avec_tout_scene53383.JPG
-   This first one shows that all except the vanilla are good.
+   
+   This scene shows the superiority of all models over the vanilla model.  
     
    .. figure:: docs/train/visualize_avec_tout_scene50782.JPG
-   This one shows that the 2 differents goals directionnal models are the bests.
+   
+   This scene demonstrates the superiority of directionnal model.
     
    .. figure:: docs/train/visualize_avec_tout_scene50876.JPG
-   Once more goals directionalmlp and goals directional are the bests
    
-   The next image is the result table, but the problem is that we can't change the table case size so the model names are not fully written in the table, so we can't know which one is directionalmlp, occupancy, or directional. But we think that the 4th one is Vanilla, the 3rd one is goals directionnal, the 2dn one is goals occupancy and the first one is goals directionnalmlp because we trained them in this order
+   However, this schene showed that in some cases, the directional MLP model behaves better than the directional LSTM. 
    
-   .. figure:: docs/train/Results_with_the_bug.JPG
+   The next image is the result table, but the problem is that we can't change the table case size so the model names are not fully written in the table, so we can't know which one is directionalmlp, occupancy, or directional.
+   
+   .. figure:: docs/train/Results with the bug.JPG
    
    
    
