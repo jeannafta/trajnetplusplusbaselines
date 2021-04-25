@@ -15,8 +15,56 @@ Florent Zolliker
    The following graphs were obtained when training the five_parallel_synth_data using a Vanilla Model & a D-Grid Model:
    
 .. figure:: docs/train/epoch-loss_goals-directionnal.JPG
-   As expected, the start loss for D-Grid model is le
    
+   As expected, the start loss for D-Grid model is lower than the Vanilla's. So, it is expected that the D-Grid Model will better predict trajectories (to be verified in 1.2)
+   
+
+   The above observation was also verified with another type of loss which is the sequential loss, as shown below:
+   
+.. figure:: docs/train/seq-loss_goals-directionnal.JPG
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
