@@ -3,14 +3,19 @@ TrajNet++ : The Trajectory Forecasting Framework
 ================================================
 
 Milestone 1
+==========
 
 Group A:
+
 Gaelle Abi Younes
+
 Jean Naftalski
+
 Florent Zolliker
 
 1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy on five_parallel_synth_data
 -----
+
    **1.1 Quantitative Evaluation**
    The following graphs were obtained when training the five_parallel_synth_data using a Vanilla Model & a D-Grid Model:
    
@@ -57,6 +62,7 @@ Florent Zolliker
    
 2. Comparaison between Vanilla & D-Grid Model using synth_data & real_data
 -----
+
 After evaluating the Vanilla Model on AICrowd, the following results for the different losses were obtained:
 
 .. figure:: docs/train/vanilla.png
