@@ -49,7 +49,7 @@ Florent Zolliker
    .. figure:: docs/train/visualize_avec_tout_scene50876.JPG
    Once more goals directionalmlp and goals directional are the bests
    
-   The next image is the result table, but the problem is that we can't change the table case size so the model names are not fully written in the table, so we can't know which one is directionalmlp, occupancy, or directional. But we think that the 4th one is Vanilla, the 3rd one is goals directionnal, the 2dn one is goals occupancy and the first one is goals directionnalmlp
+   The next image is the result table, but the problem is that we can't change the table case size so the model names are not fully written in the table, so we can't know which one is directionalmlp, occupancy, or directional. But we think that the 4th one is Vanilla, the 3rd one is goals directionnal, the 2dn one is goals occupancy and the first one is goals directionnalmlp because we trained them in this order
    
    .. figure:: docs/train/Results_with_the_bug.JPG
    
