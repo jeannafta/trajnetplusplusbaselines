@@ -75,4 +75,4 @@ After evaluating the Vanilla Model on AICrowd, the following results for the dif
 
 After evaluating the D-Grid Model on AICrowd, the following results for the different losses were obtained:
 
-
+.. figure:: docs/train/directional.png
