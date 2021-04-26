@@ -78,7 +78,7 @@ After evaluating the D-Grid Model on AICrowd, the following results for the diff
 .. figure:: docs/train/directional.png
 
 We can look at theses two images and see some terms evaluating the models.
-  In the left circles we have:
+  In the left circles (unimodal) we have:
     The average displacement error (ADE) is the average distance between the ground truth and our prediction over all predicted time steps.
 
     The final displacement error (FDE) is the distance between the predicted final destination and the true final destination at the end of the prediction period.
@@ -87,7 +87,7 @@ We can look at theses two images and see some terms evaluating the models.
   
     The prediction Collision (Pred. Collision) is the percentage of collision of primary pedestrian with the neighbors in the predicted future scene.
   
-  In the right circle we have:
+  In the right circle (multimodal) we have:
     The NLL. Given multiple samples, the metric calculates the average negative log-likelihood of groundtruth trajectory over the prediction horizion.
     
     The top3_ADE. Given 3 output predictions, the metrics calculate the ADE of the prediction closest to the groundtruth trajectory.
