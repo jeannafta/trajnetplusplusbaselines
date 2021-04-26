@@ -95,6 +95,10 @@ We can look at theses two images and see some terms evaluating the models.
     The top3_FDE. Given 3 output predictions, the metrics calculate the FDE of the prediction closest to the groundtruth trajectory.
 
 It seems that the legend is wrong because the Vanilla model is always better than our submitted model, on the wo images even with our Vanilla training as submission the Vanilla has lower ADE, FDE GT Collision and Pred. Collision. We think that the legend should be inversed, because our trained model should be better than the Vanilla basic one.
+It also seems that the NLL is not working by now because the value is 0 in both case for our submitted model.
 
+If we look the exemple we saw on the course the legend was correct:
+
+.. figure:: docs/train/UNIMODAL_MULTIMODAL_ex_du_cours.JPG
 
 
