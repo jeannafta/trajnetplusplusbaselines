@@ -97,7 +97,13 @@ We can look at theses two images and see some terms evaluating the models.
 It seems that the legend is wrong because the Vanilla model is always better than our submitted model, on the wo images even with our Vanilla training as submission the Vanilla has lower ADE, FDE GT Collision and Pred. Collision. We think that the legend should be inversed, because our trained model should be better than the Vanilla basic one.
 It also seems that the NLL is not working by now because the value is 0 in both case for our submitted model.
 
-If we look the exemple we saw on the course the legend was correct:
+Considering this, we can see interesant things:
+  The Pred. Collision and the GT Collision is lower for our trained model than for the Vanilla one, this was expected.
+  
+  We can see that ADE and FDE are only a little bit lowe, this is not that good, it means that the submitted model is not that much better than the Vanilla one considering trajectory predictions.
+  
+
+If we look the exemple we saw on the course the legend was correct and the tested model is much better than the Vanilla one in every sections except GT Collision:
 
 .. figure:: docs/train/UNIMODAL_MULTIMODAL_ex_du_cours.JPG
 
