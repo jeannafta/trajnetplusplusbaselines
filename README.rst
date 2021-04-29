@@ -60,11 +60,17 @@ AICrowd Team Name: jeannafta
    
    However, this schene showed that in some cases, the directional MLP model behaves better than the directional LSTM. 
    
-   As for the results of each model: (from top to bottom: MLP, Occasional, D-Grid, Vanilla)
+   As for the results of each model: (from top to bottom: Directionalmlp, Occupancy, Directional, Vanilla)
    
    .. figure:: docs/train/Results_new.JPG 
    
-   ADD DISCUSSION
+   labels:
+   
+    The average displacement error (ADE) is the average distance between the ground truth and our prediction over all predicted time steps.
+    
+    The final displacement error (FDE) is the distance between the predicted final destination and the true final destination at the end of the prediction period.
+    
+   We can see that the directionnal have lower values for ADE and FDE than other models, this means that it must be usually the best one to approximate the groundtruth path. 
    
 2. Comparaison between Vanilla & D-Grid Model using synth_data & real_data
 -----
