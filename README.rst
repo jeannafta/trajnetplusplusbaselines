@@ -62,7 +62,7 @@ AICrowd Team Name: jeannafta
    
    As for the results of each model: (from top to bottom: MLP, Occasional, D-Grid, Vanilla)
    
-   .. figure:: docs/train/Results.JPG
+   .. figure:: docs/train/Resul.JPG
    
    ADD DISCUSSION
    
