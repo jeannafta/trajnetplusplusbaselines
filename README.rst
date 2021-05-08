@@ -167,3 +167,25 @@ Given 8 time steps of observations as imput, we want to predict future trajector
 As in milestone 1, we will compare the models performances with FDE (Final Displacement Error). In addition, we will compare COL (collision rate).
 
 We will train all our models with Adam optimizer.
+
+3. Steps for this milestone
+-----
+
+   **3.1 Read through the Social-NCE package for Trajnet++ provided on Moodle**
+   This part has been done to understand the code with the theory, we wrote the first section (theoritical part) based on this step.
+   
+   **3.2 Implement contrastive learning and sampling methods in your own codebase**
+   
+   **3.3 Tune Social-NCE hyperparameters for the best performance**
+   
+   In this step we have to change the Social-NCE hyperparameters, these are the following:
+    head_projection=None
+    encoder_sample=None
+    sampling='social'
+    horizon=3
+    num_boundary=0
+    temperature=0.07
+    max_range=2.0
+    ratio_boundary=0.5
+   
+   **3.4 Submit your models to the AiCrowd platform**
