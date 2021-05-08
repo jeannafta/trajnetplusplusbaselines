@@ -126,7 +126,7 @@ Milestone 2
    In this milestones the aim is to upgrade our model. There is much parameters that we can use to train our data and optain better results, we could use any techniques but the one introduced in the course is contrastive learning.
    The advantage of this method is that we can use negatives data augmentation. Negative datas are there to give a greater importance to positive future events.
    
-   .. figure:: docs/train/contrastive learning representation.JPG
+   .. figure:: docs/train/contrastive_learning_representation.JPG
    
    For that we use special loss functions. This first part of milestone 2 is there to show the differents possibilities we have and to explain which one we chose, and why.
    **1.2 Loss functions**
