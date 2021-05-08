@@ -137,7 +137,7 @@ Milestone 2
    
      1.2.1 Social sampling
      
-     The first sampling method consists in drawing negative samples based on regions of other agents at a fixed time step. So we take a certain time step and we define a boundary until where samples are positive/repectively negative.
+     The first sampling method consists in drawing negative samples based on regions of other agents at a fixed time step. So we take a certain time step and we define a boundary until samples are positive/repectively negative.
      
      1.2.2 Local sampling
      
