@@ -153,7 +153,7 @@ Milestone 2
    
    **1.3 Loss function**
    
-   The loss function have a strong link with the sampling. The aim of the social contrastive loss is to encourage the extracted motion representation to be aware of socially unacceptable events using negative samples.
+   The loss function have a strong link with the sampling. The aim of the social contrastive loss is to encourage the extracted motion representation to be aware of socially unacceptable events using negative samples. (page 89 cours 8)
    
    **1.4 Advantages**
    
@@ -180,7 +180,7 @@ We will train all our models with Adam optimizer.
    
    In this step we have to change the Social-NCE hyperparameters, the basic ones are the following:
    
-   - head_projection=None (?)
+   - head_projection=None (page 75 du cours 8)
    
    - encoder_sample=None (?)
    
