@@ -114,3 +114,27 @@ If we look the exemple we saw on the course the legend was correct and the teste
 .. figure:: docs/train/UNIMODAL_MULTIMODAL_ex_du_cours.JPG
 
 
+================================================
+
+Milestone 2
+==========
+
+1. Theoritical part on contrastive learning
+-----
+
+   **1.1 Introduction**
+   In this milestones the aim is to upgrade our model. There is much parameters that we can use to train our data and optain better results, we could use any techniques but the one introduced in the course is contrastive learning.
+   The advantage of this method is that we can use negatives data augmentation. Negative datas are there to give a greater importance to positive future events.
+   
+   .. figure:: docs/train/contrastive learning representation.JPG
+   
+   For that we use special loss functions. This first part of milestone 2 is there to show the differents possibilities we have and to explain which one we chose, and why.
+   **1.2 Loss functions**
+   
+   
+   
+   
+   
+   
+   
+   
