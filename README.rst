@@ -124,7 +124,7 @@ Milestone 2
 
    **1.1 Introduction**
    In this milestones the aim is to upgrade our model. There is much parameters that we can use to train our data and optain better results, we could use any techniques but the one introduced in the course is social contrastive learning.
-   The advantage of this method is that we can use negatives data augmentation. Negative datas are there to give a greater importance to positive future events.  
+   The advantage of this method is that we introduce a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones.  
    
    .. figure:: docs/train/contrastive_learning_representation.JPG
    
