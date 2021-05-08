@@ -179,21 +179,22 @@ We will train all our models with Adam optimizer.
    **3.3 Tune Social-NCE hyperparameters for the best performance**
    
    In this step we have to change the Social-NCE hyperparameters, the basic ones are the following:
-   - head_projection=None  
    
-   - encoder_sample=None  
+   - head_projection=None (?)
    
-   - sampling='social'
+   - encoder_sample=None (?)
    
-   - horizon=3
+   - sampling='social' (this is the sampling method choice)
    
-   - num_boundary=0
+   - horizon=3 (?)
    
-   - temperature=0.07
+   - num_boundary=0 (?)
    
-   - max_range=2.0
+   - temperature=0.07 (?)
    
-   - ratio_boundary=0.5
+   - max_range=2.0 (?)
+   
+   - ratio_boundary=0.5 (?)
    
    
    **3.4 Submit your models to the AiCrowd platform**
