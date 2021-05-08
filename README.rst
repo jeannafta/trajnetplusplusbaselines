@@ -184,8 +184,11 @@ We will train all our models with Adam optimizer.
    - encoder_sample=None
    
    - [] sampling='social'
+
    - horizon=3
+
    - num_boundary=0
+
    - temperature=0.07
    - max_range=2.0
    - ratio_boundary=0.5
