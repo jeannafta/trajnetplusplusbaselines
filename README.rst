@@ -163,4 +163,5 @@ Milestone 2
 For our experiment we want to train and evaluate models with the following settings:
 Given 8 time steps of observations as imput, we want to predict future trajectories for 12 time steps for all human agents in the scene.
 As in milestone 1, we will compare the models performances with FDE (Final Displacement Error). In addition, we will compare COL (collision rate).
-   
+
+We will train all our models with Adam optimizer.
