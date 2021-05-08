@@ -123,17 +123,39 @@ Milestone 2
 -----
 
    **1.1 Introduction**
-   In this milestones the aim is to upgrade our model. There is much parameters that we can use to train our data and optain better results, we could use any techniques but the one introduced in the course is contrastive learning.
-   The advantage of this method is that we can use negatives data augmentation. Negative datas are there to give a greater importance to positive future events.
-   
+   In this milestones the aim is to upgrade our model. There is much parameters that we can use to train our data and optain better results, we could use any techniques but the one introduced in the course is social contrastive learning.
+   The advantage of this method is that we can use negatives data augmentation. Negative datas are there to give a greater importance to positive future events.  
    .. figure:: docs/train/contrastive_learning_representation.JPG
    
-   For that we use special loss functions. This first part of milestone 2 is there to show the differents possibilities we have and to explain which one we chose, and why.
-   **1.2 Loss functions**
    
    
+   For that we can use different sampling strategies and different loss functions. This first part of milestone 2 is there to show the differents possibilities we have, and to explain which one we chose, and why.
    
+   **1.2 Sampling strategies**
    
+     1.2.1 Social sampling
+     
+     The first sampling method consists in drawing negative samples based on regions of other agents at a fixed time step. So we take a certain time step and we define a boundary until where samples are positive/repectively negative.
+     
+     1.2.2 Local sampling
+     
+     The second sampling method consits in drawing negative samples based on the distance from postive sample's neighborhood. This means we take the positive samples and we add it a certain value. This value is a distance calculated with a radius and a theta based on the positive sample neighborhood.
+     
+     1.2.3 Event sampling
+     
+     The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but this time we look at multiple time steps.
+   
+     1.2.4 Positive sampling
+   
+     The fourth ampling method consists in drawing hard postive samples at a given time step. This means that we look at a time step and we create the samples, then the aim is to remove the false positive, so we define a mask that gives us a limit until when it is a real positive sample and we remove the false positive samples.
+   
+   **1.3 Loss function**
+   
+   The loss function have a strong link with the sampling. The aim of the social contrastive loss is to encourage the extracted motion representation to be aware of socially unacceptable events using negative samples.
+   
+   **1.4 Advantages**
+   
+   We can see that the biggest surplus is that the collision rate will get much lower with this technique, because of the big weight putted on positive samples using negative ones.
    
    
    
