@@ -114,7 +114,7 @@ If we look the exemple we saw on the course the legend was correct and the teste
 .. figure:: docs/train/UNIMODAL_MULTIMODAL_ex_du_cours.JPG
 
 
-1. Retraining using CFF datas
+3. Retraining using CFF datas
 -----
 We tried to use all the data set including cff datas to train our model, the induced model is not as good as before. The trained model without cff data is better. There can be multiple reasons to this, but the main one is that cff data were too noisy and so it's lowering the model training performances. The final difference between the two models is not that high because having more data is a good thing overall, so it lowers the bad impact of the noisy datas.
 
