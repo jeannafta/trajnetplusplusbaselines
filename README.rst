@@ -207,4 +207,11 @@ Obtained results:
 FDE: 1.190
 
 COL-I: 4.830
-  
+..figure:: docs/train/summary.JPG
+
+4. Negavite and positive samples visualisation
+-----
+
+..figure:: docs/train/scene_and_samples0.png
+
+..figure:: docs/train/scene_and_samples1.png
