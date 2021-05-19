@@ -170,6 +170,7 @@ To accurately predict the trajectory of the primary agent, some important featur
    
 .. figure:: docs/train/Time.png
 **2.3 Embedding**
+
 Once the query, positive and negative data were obtained, they were embedded in the space and normalized across the features dimension. 
 
 
