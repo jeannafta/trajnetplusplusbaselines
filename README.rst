@@ -160,6 +160,8 @@ Negative and positive data were visualized:
 
 .. figure:: docs/train/scene_and_samples0.png
 
+Samples with NaN data were replaced with -10 as can be seen in Figure below:
+
 .. figure:: docs/train/scene_and_samples1.png
 
 **2.2 Query**
