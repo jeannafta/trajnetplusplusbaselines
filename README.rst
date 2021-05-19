@@ -156,7 +156,7 @@ Positive samples correspond to the groundthruth of primary agent at a specific t
      
 The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
    
-
+Negative and positive data were visualized:
 .. figure:: docs/train/scene_and_samples0.png
 
 .. figure:: docs/train/scene_and_samples1.png
@@ -165,7 +165,7 @@ The third sampling method consists in drawing negative samples based on regions 
    
 To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. A 2 layer MLP are added downstream because the last layer is too specific to the pretrained task which drives the model to underperform.
    
-
+.. figure:: docs/train/Time.png
 **2.3 Embedding**
 Once the query, positive and negative data were obtained, they were embedded in the space and normalized across the features dimension. 
 
