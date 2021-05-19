@@ -114,6 +114,10 @@ If we look the exemple we saw on the course the legend was correct and the teste
 .. figure:: docs/train/UNIMODAL_MULTIMODAL_ex_du_cours.JPG
 
 
+1. Retraining using CFF datas
+-----
+We tried to use all the data set including cff datas to train our model, the induced model is not as good as before. The trained model without cff data is better. There can be multiple reasons to this, but the main one is that cff data were too noisy and so it's lowering the model training performances. The final difference between the two models is not that high because having more data is a good thing overall, so it lowers the bad impact of the noisy datas.
+
 ================================================
 
 Milestone 2
@@ -163,10 +167,12 @@ Milestone 2
 -----
 
 For our experiment we want to train and evaluate models with the following settings:
-Given 8 time steps of observations as imput, we want to predict future trajectories for 12 time steps for all human agents in the scene.
+Given 9 time steps of observations as imput, we want to predict future trajectories for 12 time steps for all human agents in the scene.
 As in milestone 1, we will compare the models performances with FDE (Final Displacement Error). In addition, we will compare COL (collision rate).
 
 We will train all our models with Adam optimizer.
+
+The two models we implemented are the social sampling (in our code it's named "spacial sampling") and the event sampling. As shown in the theoritical part, theses two methods are pretty similar, we had to implement time vectors to differentiate the event encoder, the rest is similar.
 
 3. Steps for this milestone
 -----
@@ -175,26 +181,34 @@ We will train all our models with Adam optimizer.
    This part has been done to understand the code with the theory, we wrote the first section (theoritical part) based on this step.
    
    **3.2 Implement contrastive learning and sampling methods in your own codebase**
+   This is done in the "contrastive.py" file.
    
    **3.3 Tune Social-NCE hyperparameters for the best performance**
-   
    In this step we have to change the Social-NCE hyperparameters, the basic ones are the following:
    
    - head_projection=None (page 75 du cours 8)
    
-   - encoder_sample=None (?)
+   - contrast_weight=1 or 0.1 or another thing (this is the weight we want to give to the nce loss)
+   For this parameters we found out that the best value to give was 0.1. This is also what we red in the paper you gave us.
    
-   - sampling='social' (this is the sampling method choice)
+   - contrast_sampling='social' or 'multi' (this is the sampling method choice, multi chose the event sampling method)
+   We found out that the best one is the even sampling method so we took the 'multi' parameters.
    
-   - horizon=3 (?)
+   - horizon=3 (this is the horizon time we want to consider, especially for even sampling)
+   The best horizon, according to the paper is 3. This is the one we chose.
    
-   - num_boundary=0 (?)
+   - lr=0.001 (learning rate)
+   Learning rate doesn't impact that much, we kept it to 0.001.
    
-   - temperature=0.07 (?)
+   - type= 'directional'
+   We found out in milestone 1 that the best model was the D-Grid one, so we kept that directional for the milestone 2.
    
-   - max_range=2.0 (?)
-   
-   - ratio_boundary=0.5 (?)
+   The most important parameters we changed is the contrast_weight.
    
    
    **3.4 Submit your models to the AiCrowd platform**
+   After submitting theses are our results:
+   
+   .. figure::
+   
+   the trained model is not really better in appearance but we we look more precisely to the collision rate, we see that the model improved that part pretty much. This is due to the nce modeling permitting to give a greater importance to positive samples which doesn't lead to collisions.
