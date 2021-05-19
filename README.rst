@@ -133,7 +133,7 @@ Based on this idea, the concept of social contrastive learning was created, and 
 **1.2 What is Social Contrastive Learning?**
 The key behind implementing contrastive learning is data augmentation. The type of data that needs to be created is "dangerous" data that will allow the model to become more socially aware. This data, also called Negative Data, is generated at a certain time for all neighbors of a scene and that using their trajectory and position. while Positive Data corresponds to the groundtruth position of the primary agent at that same time. 
 The model should then be able to correctly predict the trajectory of the primary agent while avoiding unfavorable events. 
-The advantage of this method is that it introduces a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones [(Liu Y. et al.)] (https://arxiv.org/pdf/2012.11717.pdf)
+The advantage of this method is that it introduces a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones [(Liu Y. et al.)](https://arxiv.org/pdf/2012.11717.pdf) [hj](https://arxiv.org/pdf/2012.11717.pdf)
    
    .. figure:: docs/train/contrastive_learning_representation.JPG
    
