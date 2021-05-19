@@ -149,7 +149,7 @@ Another crucial step of that process, was to decide on a step time within the sa
      
       1.2.3 Event sampling
      
-     The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but this time we look at multiple time steps.
+The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
    
    
    **1.3 Loss function**
