@@ -157,6 +157,7 @@ Positive samples correspond to the groundthruth of primary agent at a specific t
 The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
    
 Negative and positive data were visualized:
+
 .. figure:: docs/train/scene_and_samples0.png
 
 .. figure:: docs/train/scene_and_samples1.png
