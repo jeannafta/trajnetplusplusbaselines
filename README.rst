@@ -174,12 +174,15 @@ Once the query, positive and negative data were obtained, they were embedded in 
 
 
 **2.4 Similarity**
+
 This task is established in order to maximize similarity between the extracted motion representation and the representation of positive events, and minimize similarity between the extracted motion representation and the representation of negative events. 
 
 **2.5 Loss**
+
 Loss is computed between the logits and labels. Labels were drawn from the data itself (Self-supervised Learning). An NCE Loss is generated then given a certain weight λ (hyperparameter to be fine-tuned while training) and then added to the basic loss. 
 
 **2.6 Settings & Training**
+
 Given 9 time steps of observations as imput, we want to predict future trajectories for 12 time steps for the primary agent.
 As in milestone 1, we will compare the models performances with reference to FDE (Final Displacement Error) and COL-1 (collision rate).
 
