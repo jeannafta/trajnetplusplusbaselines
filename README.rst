@@ -131,6 +131,7 @@ So far, the trained model is not socially aware, meaning that it is not able to 
 Based on this idea, the concept of social contrastive learning was created, and will be implemented as part of this milestone. 
 
 **1.2 What is Social Contrastive Learning?**
+
 The key behind implementing contrastive learning is data augmentation. The type of data that needs to be created is "dangerous" data that will allow the model to become more socially aware. This data, also called Negative Data, is generated at a certain time for all neighbors of a scene and that using their trajectory and position. while Positive Data corresponds to the groundtruth position of the primary agent at that same time. 
 The model should then be able to correctly predict the trajectory of the primary agent while avoiding these unfavorable events. 
 The advantage of this method is that it introduces a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones (Liu, Y., et al.) https://arxiv.org/pdf/2012.11717.pdf 
@@ -139,6 +140,7 @@ The advantage of this method is that it introduces a social contrastive loss tha
     ..figure:: docs/train/contrastive_learning_representation.JPG
    
 **1.3 Sampling strategies**
+
 Eventhough several sampling strategies exist, only two were implemented within the scope of this milestone: 
      
      1.2.1 Spatial sampling
@@ -152,9 +154,9 @@ Another crucial step of that process, was to decide on a step time within the sa
 The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
    
    
-   **1.3 Loss function**
+**1.3 Query**
    
-   The loss function have a strong link with the sampling. The aim of the social contrastive loss is to encourage the extracted motion representation to be aware of socially unacceptable events using negative samples. (page 89 cours 8)
+To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent
    
    **1.4 Advantages**
    
