@@ -126,7 +126,7 @@ Milestone 2 - Implementing Social Contrastive Learning
 1. Introduction
 -----
 
-   **1.1 Problem Statement**
+**1.1 Problem Statement**
 So far, the trained model is not socially aware, meaning that it is not able to differentiate between socially acceptable behaviors and what is not. However, how can the model differentiate between the two and avoid socially unfavorable events such as collisions, when these scenarios rarely happen in real life and are almost completey absent in real data? 
 Based on this idea, the concept of social contrastive learning was created, and will be implemented as part of this milestone. 
 
@@ -136,14 +136,16 @@ The model should then be able to correctly predict the trajectory of the primary
 The advantage of this method is that it introduces a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones (Liu, Y., et al.) https://arxiv.org/pdf/2012.11717.pdf 
 
    
-    figure:: docs/train/contrastive_learning_representation.JPG
+    ..figure:: docs/train/contrastive_learning_representation.JPG
    
 **1.3 Sampling strategies**
 Eventhough several sampling strategies exist, only two were implemented within the scope of this milestone: 
      
      1.2.1 Spatial sampling
      
-     This method consists in drawing negative samples based on locations of neighbouring agents at a fixed time step. From this position, 8 more positions are generated with the actual position being the center of the 
+This method consists in drawing negative samples based on locations of neighbouring agents at a fixed time step. From this position, 8 more positions are generated in such a way to form a circle around the actual position. In total, 9 negative samples are generated per agent and some noise was also added to leave some room for error. One of the many challenges encountered to accomplish this task was the variability of neighbors in each scene. To deal with that, a NaN tensor was created having of its dimension equal to the maximal number of neighbors in that particular batch, and another of its dimensions equal to the number of scenes in the batch (1 batch contains 8 scenes). Negative samples were then generated and replaced the NaN values when possible. However, some NaN values were still present in the negative samples when the number of neighbors in that scene is less than the maximum number of neighbors. Once the negative data generated, some values were considered easy if they were too far from the primary agent and too hard if they were too close. If the distance between the agent of interest and its neighbors i.e., distance between negative and positive data was smaller than a minimum separation and larger than a maximum separation, the coordiantes of these specific locations were set to NaN. Another source of NaN values is missing values from the data itself. 
+The NaN values were then replaced by -10 meaning that this agent is far from the primary agent and therefore is not of interest. 
+Another crucial step of that process, was to decide on a step time within the sampling horizon. For a sampling horizon equal to 4, the time step before the last i.e. t=3 was  "yields significant performance gains on both reward and collision metrics" (Liu, Y., et al.) https://arxiv.org/pdf/2012.11717.pdf. 
      
       1.2.3 Event sampling
      
