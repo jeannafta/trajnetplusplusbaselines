@@ -136,8 +136,7 @@ The key behind implementing contrastive learning is data augmentation. The type 
 The model should then be able to correctly predict the trajectory of the primary agent while avoiding these unfavorable events. 
 The advantage of this method is that it introduces a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones (Liu, Y., et al.) https://arxiv.org/pdf/2012.11717.pdf 
 
-   
-    ..figure:: docs/train/contrastive_learning_representation.JPG
+.. figure:: docs/train/contrastive_learning_representation.JPG
 
 2. Implementation
 -----
@@ -157,7 +156,11 @@ Positive samples correspond to the groundthruth of primary agent at a specific t
      
 The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
    
-   
+
+.. figure:: docs/train/scene_and_samples0.png
+
+.. figure:: docs/train/scene_and_samples1.png
+
 **2.2 Query**
    
 To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. A 2 layer MLP are added downstream because the last layer is too specific to the pretrained task which drives the model to underperform.
@@ -209,10 +212,3 @@ FDE: 1.190
 COL-I: 4.830
 
 .. figure:: docs/train/summary.png
-
-4. Negavite and positive samples visualisation
------
-
-.. figure:: docs/train/scene_and_samples0.png
-
-.. figure:: docs/train/scene_and_samples1.png
