@@ -202,5 +202,9 @@ Trained models on synth_data and real_data were evaluated and submitted on the A
 | Temperature                 |            0.07             |
 +-----------------------------+-----------------------------+   
        
+Obtained results:
 
+FDE: 1.190
+
+COL-I: 4.830
   
