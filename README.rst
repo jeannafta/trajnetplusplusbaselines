@@ -132,7 +132,7 @@ Based on this idea, the concept of social contrastive learning was created, and 
 
 **1.2 What is Social Contrastive Learning?**
 
-The key behind implementing contrastive learning is data augmentation. The type of data that needs to be created is "dangerous" data that will allow the model to become more socially aware. This data, also called Negative Data, is generated at a certain time for all neighbors of a scene and that using their trajectory and position. while Positive Data corresponds to the groundtruth position of the primary agent at that same time. 
+The key behind implementing contrastive learning is data augmentation. The type of data that needs to be created is "dangerous" data that will allow the model to become more socially aware. This data, also called Negative Data, is generated at a certain time for all neighbors of a scene and that using their trajectory and position. While Positive Data corresponds to the groundtruth position of the primary agent at that same time. 
 The model should then be able to correctly predict the trajectory of the primary agent while avoiding these unfavorable events. 
 The advantage of this method is that it introduces a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones (Liu, Y., et al.) https://arxiv.org/pdf/2012.11717.pdf 
 
@@ -152,18 +152,20 @@ The NaN values were then replaced by -10 meaning that this agent is far from the
 Another crucial step of that process, was to decide on a step time within the sampling horizon. For a sampling horizon equal to 4, the time step before the last i.e. t=3 was  "yields significant performance gains on both reward and collision metrics" [https://arxiv.org/pdf/2012.11717.pdf. oui] Liu, Y., et al.
 Positive samples correspond to the groundthruth of primary agent at a specific time with some noise added to it. 
      
-      2.1.2 Event sampling
-     
-The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
-   
-Negative and positive data were visualized:
+  Negative and positive data were visualized:
+  
+  In this scene, no NaN values were encountered. 
 
 .. figure:: docs/train/scene_and_samples0.png
 
 Samples with NaN data were replaced with -10 as can be seen in Figure below:
 
-.. figure:: docs/train/scene_and_samples1.png
-
+.. figure:: docs/train/scene_and_samples1.png    
+      
+      2.1.2 Event sampling
+     
+This sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
+   
 **2.2 Query**
    
 To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. A 2 layer MLP are added downstream because the last layer is too specific to the pretrained task which drives the model to underperform.
