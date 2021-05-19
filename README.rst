@@ -178,12 +178,15 @@ The two models we implemented are the social sampling (in our code it's named "s
 -----
 
    **3.1 Read through the Social-NCE package for Trajnet++ provided on Moodle**
+   
    This part has been done to understand the code with the theory, we wrote the first section (theoritical part) based on this step.
    
    **3.2 Implement contrastive learning and sampling methods in your own codebase**
+   
    This is done in the "contrastive.py" file.
    
    **3.3 Tune Social-NCE hyperparameters for the best performance**
+   
    In this step we have to change the Social-NCE hyperparameters, the basic ones are the following:
    
    - head_projection=None (page 75 du cours 8)
@@ -207,6 +210,7 @@ The two models we implemented are the social sampling (in our code it's named "s
    
    
    **3.4 Submit your models to the AiCrowd platform**
+   
    After submitting theses are our results:
    
    .. figure::
