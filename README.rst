@@ -2,7 +2,7 @@
 TrajNet++ : The Trajectory Forecasting Framework
 ================================================
 
-Milestone 1
+Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
 ==========
 
 +-----------------------------+
@@ -120,19 +120,25 @@ We tried to use all the data set including cff datas to train our model, the ind
 
 ================================================
 
-Milestone 2
+Milestone 2 - Implementing Social Contrastive Learning
 ==========
 
-1. Theoritical part on contrastive learning
+1. Introduction
 -----
 
-   **1.1 Introduction**
-   In this milestones the aim is to upgrade our model. There is much parameters that we can use to train our data and optain better results, we could use any techniques but the one introduced in the course is social contrastive learning.
-   The advantage of this method is that we introduce a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones.  
+   **1.1 Problem Statement**
+So far, the trained model is not socially aware, meaning that it is not able to differentiate between socially acceptable behaviors and what is not. However, how can the model differentiate between the two and avoid socially unfavorable events such as collisions, when these scenarios rarely happen in real life and are almost completey absent in real data? 
+Based on this idea, the concept of social contrastive learning was created, and will be implemented as part of this milestone. 
+
+**1.2 What is Social Contrastive Learning?**
+The key behind implementing contrastive learning is data augmentation. The type of data that needs to be created is "dangerous" data that will allow the model to become more socially aware. This data, also called Negative Data, is generated at a certain time for all neighbors of a scene and that using their trajectory and position. while Positive Data corresponds to the groundtruth position of the primary agent at that same time. 
+The model should then be able to correctly predict the trajectory of the primary agent while avoiding unfavorable events. 
+The advantage of this method is that it introduces a social contrastive loss that encourages the encoded motion representation to preserve sufficient information for distinguishing a positive future event from a set of negative ones 
+[I'm an inline-style link](https://www.google.com)
    
    .. figure:: docs/train/contrastive_learning_representation.JPG
    
-   
+
    
    
    For that we can use different sampling strategies and different loss functions. This first part of milestone 2 is there to show the differents possibilities we have, and to explain which one we chose, and why.
