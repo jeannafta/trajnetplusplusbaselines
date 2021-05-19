@@ -168,10 +168,12 @@ This sampling method consists in drawing negative samples based on regions of ot
    
 **2.2 Query**
    
-To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. A 2 layer MLP are added downstream because the last layer is too specific to the pretrained task which drives the model to underperform.
+To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. A 2 layer MLP (Projection Head) are added downstream because the last layer is too specific to the pretrained task which drives the model to underperform.
    
 .. figure:: docs/train/Time.png
+
 **2.3 Embedding**
+
 Once the query, positive and negative data were obtained, they were embedded in the space and normalized across the features dimension. 
 
 
