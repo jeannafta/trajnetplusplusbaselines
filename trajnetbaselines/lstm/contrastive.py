@@ -29,7 +29,9 @@ class SocialNCE():
         self.min_seperation = 0.2  # rho = minimum physical distance between two agents
         self.agent_zone = self.min_seperation * torch.tensor([[1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0], [0.707, 0.707], [0.707, -0.707], [-0.707, 0.707], [-0.707, -0.707], [0.0, 0.0]])   # delta s_p (ce sont des vecteurs de cos et sin d'où leurs valeurs entre 0 et 1) --> on obtient la zone confort des agents: les 8+1 points repésentent les points du cercle trigonométrique plus le centre du cercle. 
         
+        ################# A retirer si ça ne marche pas ######################
         self.max_seperation = 5. # env-dependent parameter, diameter of agents (on met a "un certain nombre (0, -10 ou autre)" ceux qui son plus loins)
+        ######################################################################
         
     def spatial(self, batch_scene, batch_split, batch_feat):
         '''
@@ -70,6 +72,14 @@ class SocialNCE():
         # sampling
         sample_pos, sample_neg = self._sampling_spatial(batch_scene, batch_split)
         
+        ## test plot samples
+        #for i in range(batch_split.shape[0] - 1):
+        #    traj_primary = batch_scene[:, batch_split[i]] # [time, 2]
+        #    traj_neighbor = batch_scene[:, batch_split[i]+1:batch_split[i+1]] # [time, num, 2]
+        #    plot_samples(traj_primary, traj_neighbor, fname='scene_and_samples{:d}.png'.format(i), 
+        #                 sample_pos_scene=sample_pos[i], sample_neg_scene=sample_neg[i],                                    obs_length=self.obs_length, pred_length=self.pred_length)
+        #import pdb; pdb.set_trace()
+            
         # -----------------------------------------------------
         #              Lower-dimensional Embedding 
         # -----------------------------------------------------
@@ -97,7 +107,7 @@ class SocialNCE():
         # -----------------------------------------------------
         
         # logits
-        # if we have time to implement a mask: logits = (torch.cat([flat_pos, flat_neg], dim=1) / self.temperature)[mask_pos[mask_valid].view(-1)]
+        # logits = (torch.cat([flat_pos, flat_neg], dim=1) / self.temperature)[mask_pos[mask_valid].view(-1)]
         logits = torch.cat([sim_pos.unsqueeze(1), sim_neg], dim=1) / self.temperature  # to obtain the logit vector of slide 89 (Lecture 8)
         
         labels = torch.zeros(logits.size(0), dtype=torch.long)
@@ -251,6 +261,8 @@ class SocialNCE():
         sample_pos[torch.isnan(sample_pos)] = -10.  # nans because of missing data
         sample_neg[torch.isnan(sample_neg)] = -10.  # nans because of missing data or number of neigbhours < max number of neigbhours 
         
+        # create a mask to ignore the nans... -->  mask_valid = (dist > self.min_seperation) & (dist < self.max_seperation)
+        
         return sample_pos, sample_neg  #, mask_valid
 
 
@@ -303,7 +315,10 @@ class SocialNCE():
 
             sample_neg_scene = gt_future_neigbours[0:self.horizon]     # [4, M-1, 2]
             # need to reshape the tensor so that we have 9 negative samples in total around each sample seed [4 ,(M-1)*9, 2]
+            #print("sample_neg_scene", sample_neg_scene)
             sample_neg_scene = torch.repeat_interleave(sample_neg_scene, self.agent_zone.shape[0], dim=1)    # [4, (M-1)*9, 2]
+            #print("shape of gt_future_neigbours: ", gt_future_neigbours.shape)
+            #print("gt_future_neigbours", gt_future_neigbours)
             agent_zone = torch.cat([self.agent_zone]*gt_future_neigbours.shape[1])    # [(M-1)*9, 2]
             agent_zone = agent_zone[None, ...].repeat(self.horizon, 1, 1) # [ 9*(M-1), 2, 4]
             sample_neg_scene += agent_zone
@@ -337,10 +352,7 @@ class SocialNCE():
         sample_pos[torch.isnan(sample_pos)] = -10.  # nans because of missing data
         sample_neg[torch.isnan(sample_neg)] = -10.  # nans because of missing data or number of neigbhours < max number of neigbhours
 
-        # we were not sure of how we could implement the mask so that the training is quicker.
-        # according to us two masks should have been necessary (one for nans in positive samples and one 
-        # for nans in negative samples), but we did not understand how to implement a single mask that includes
-        # everything, as it was done in the provided codes 
+        # create a mask to ignore the nans... -->  mask_valid = (dist > self.min_seperation) & (dist < self.max_seperation)
         return sample_pos, sample_neg  #, mask_valid
 
 class EventEncoder(nn.Module):
@@ -378,7 +390,7 @@ class SpatialEncoder(nn.Module):
         super(SpatialEncoder, self).__init__()
         self.encoder = nn.Sequential(
             nn.Linear(2, hidden_dim),
-            nn.ReLU(inplace=False),   # Normally it is set to True 
+            nn.ReLU(inplace=True), 
             nn.Linear(hidden_dim, head_dim)
         )
 
@@ -415,6 +427,33 @@ def plot_scene(primary, neighbor, fname):
     ax.plot(primary[:, 0], primary[:, 1], 'k-')
     for i in range(neighbor.size(1)):
         ax.plot(neighbor[:, i, 0], neighbor[:, i, 1], 'b-.')
+
+    ax.set_aspect('equal')
+    plt.grid()
+    plt.savefig(fname, bbox_inches='tight', pad_inches=0)
+    plt.close(fig)
+    
+def plot_samples(primary, neighbor, fname, sample_pos_scene, sample_neg_scene, obs_length, pred_length):
+    '''
+    Plot raw trajectories and positive/negative samples
+    '''
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    fig = plt.figure(frameon=False)
+    fig.set_size_inches(16, 9)
+    ax = fig.add_subplot(1, 1, 1)
+
+    ax.plot(primary[:obs_length+1, 0], primary[:obs_length+1, 1], 'k')
+    ax.plot(primary[obs_length:obs_length+pred_length, 0], primary[obs_length:obs_length+pred_length, 1], 'k--')
+    ax.scatter(sample_pos_scene[0], sample_pos_scene[1], marker='*', color='green')
+    for i in range(neighbor.size(1)):
+        ax.plot(neighbor[:obs_length+1, i, 0], neighbor[:obs_length+1, i, 1], 'b')
+        ax.plot(neighbor[obs_length:obs_length+pred_length, i, 0], neighbor[obs_length:obs_length+pred_length, i, 1], 'b--')
+    
+    for i in range(sample_neg_scene.shape[0]):
+        ax.scatter(sample_neg_scene[i, 0], sample_neg_scene[i, 1], marker='*', color='red')
 
     ax.set_aspect('equal')
     plt.grid()
