@@ -138,80 +138,68 @@ The advantage of this method is that it introduces a social contrastive loss tha
 
    
     ..figure:: docs/train/contrastive_learning_representation.JPG
-   
-**1.3 Sampling strategies**
+
+2. Implementation
+-----
+**2.1 Sampling strategies**
 
 Eventhough several sampling strategies exist, only two were implemented within the scope of this milestone: 
      
-     1.2.1 Spatial sampling
+     
+     2.1.1 Spatial sampling
      
 This method consists in drawing negative samples based on locations of neighbouring agents at a fixed time step. From this position, 8 more positions are generated in such a way to form a circle around the actual position. In total, 9 negative samples are generated per agent and some noise was also added to leave some room for error. One of the many challenges encountered to accomplish this task was the variability of neighbors in each scene. To deal with that, a NaN tensor was created having of its dimension equal to the maximal number of neighbors in that particular batch, and another of its dimensions equal to the number of scenes in the batch (1 batch contains 8 scenes). Negative samples were then generated and replaced the NaN values when possible. However, some NaN values were still present in the negative samples when the number of neighbors in that scene is less than the maximum number of neighbors. Once the negative data generated, some values were considered easy if they were too far from the primary agent and too hard if they were too close. If the distance between the agent of interest and its neighbors i.e., distance between negative and positive data was smaller than a minimum separation and larger than a maximum separation, the coordiantes of these specific locations were set to NaN. Another source of NaN values is missing values from the data itself. 
 The NaN values were then replaced by -10 meaning that this agent is far from the primary agent and therefore is not of interest. 
 Another crucial step of that process, was to decide on a step time within the sampling horizon. For a sampling horizon equal to 4, the time step before the last i.e. t=3 was  "yields significant performance gains on both reward and collision metrics" (Liu, Y., et al.) https://arxiv.org/pdf/2012.11717.pdf. 
+Positive samples correspond to the groundthruth of primary agent at a specific time with some noise added to it. 
      
-      1.2.3 Event sampling
+      2.1.2 Event sampling
      
 The third sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
    
    
-**1.3 Query**
+**2.2 Query**
    
-To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent
+To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. A 2 layer MLP are added downstream because the last layer is too specific to the pretrained task which drives the model to underperform.
    
-   **1.4 Advantages**
-   
-   We can see that the biggest surplus is that the collision rate will get much lower with this technique, because of the big weight putted on positive samples using negative ones.
-   
-2. Experiment
+
+**2.3 Embedding**
+Once the query, positive and negative data were obtained, they were embedded in the space and normalized across the features dimension. 
+
+
+**2.4 Similarity**
+This task is established in order to maximize similarity between the extracted motion representation and the representation of positive events, and minimize similarity between the extracted motion representation and the representation of negative events. 
+
+**2.5 Loss**
+Loss is computed between the logits and labels. Labels were drawn from the data itself (Self-supervised Learning). An NCE Loss is generated then given a certain weight λ (hyperparameter to be fine-tuned while training) and then added to the basic loss. 
+
+**2.6 Settings & Training**
+Given 9 time steps of observations as imput, we want to predict future trajectories for 12 time steps for the primary agent.
+As in milestone 1, we will compare the models performances with reference to FDE (Final Displacement Error) and COL-1 (collision rate).
+
+All models will be trained using Adam optimizer.
+
+Since the D-Grid model yields better results, as shown in Milestone 1, it will be used to train models in this Milestone. 
+
+
+3. Results and Hyperparameter Fine-Tuning
 -----
+Trained models on synth_data and real_data were evaluated and submitted on the AICrowd Platform (https://www.aicrowd.com/challenges/trajnet-a-trajectory-forecasting-challenge/leaderboards)
 
-For our experiment we want to train and evaluate models with the following settings:
-Given 9 time steps of observations as imput, we want to predict future trajectories for 12 time steps for all human agents in the scene.
-As in milestone 1, we will compare the models performances with FDE (Final Displacement Error). In addition, we will compare COL (collision rate).
+**Attempt 1:**
++-----------------------------+-----------------------------+
+| **Hyperparamter**           |        **Value**            |
++-----------------------------+-----------------------------+ 
+| Learning Rate               |           0.001             |
++-----------------------------+-----------------------------+
+| Contrast Sampling           |           Multi             |
++-----------------------------+-----------------------------+ 
+| λ                           |            0.1              |
++-----------------------------+-----------------------------+
+| Epochs                      |            16               |
++-----------------------------+-----------------------------+
+| Temperature                 |            0.07             |
++-----------------------------+-----------------------------+   
+       
 
-We will train all our models with Adam optimizer.
-
-The two models we implemented are the social sampling (in our code it's named "spacial sampling") and the event sampling. As shown in the theoritical part, theses two methods are pretty similar, we had to implement time vectors to differentiate the event encoder, the rest is similar.
-
-3. Steps for this milestone
------
-
-   **3.1 Read through the Social-NCE package for Trajnet++ provided on Moodle**
-   
-   This part has been done to understand the code with the theory, we wrote the first section (theoritical part) based on this step.
-   
-   **3.2 Implement contrastive learning and sampling methods in your own codebase**
-   
-   This is done in the "contrastive.py" file.
-   
-   **3.3 Tune Social-NCE hyperparameters for the best performance**
-   
-   In this step we have to change the Social-NCE hyperparameters, the basic ones are the following:
-   
-   - head_projection=None (page 75 du cours 8)
-   
-   - contrast_weight=1 or 0.1 or another thing (this is the weight we want to give to the nce loss)
-   For this parameters we found out that the best value to give was 0.1. This is also what we red in the paper you gave us.
-   
-   - contrast_sampling='social' or 'multi' (this is the sampling method choice, multi chose the event sampling method)
-   We found out that the best one is the even sampling method so we took the 'multi' parameters.
-   
-   - horizon=3 (this is the horizon time we want to consider, especially for even sampling)
-   The best horizon, according to the paper is 3. This is the one we chose.
-   
-   - lr=0.001 (learning rate)
-   Learning rate doesn't impact that much, we kept it to 0.001.
-   
-   - type= 'directional'
-   We found out in milestone 1 that the best model was the D-Grid one, so we kept that directional for the milestone 2.
-   
-   The most important parameters we changed is the contrast_weight.
-   
-   
-   **3.4 Submit your models to the AiCrowd platform**
-   
-   After submitting theses are our results:
-   
-   .. figure::
-   
-   the trained model is not really better in appearance but we we look more precisely to the collision rate, we see that the model improved that part pretty much. This is due to the nce modeling permitting to give a greater importance to positive samples which doesn't lead to collisions.
+  
