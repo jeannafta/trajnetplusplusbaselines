@@ -14,7 +14,8 @@ Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
 | Florent Zolliker            |  
 +-----------------------------+ 
 
-AICrowd Team Name: jeannafta
+AICrowd Team Name: CIVIL-459_GroupA
+
 
 1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy on five_parallel_synth_data
 -----
