@@ -195,7 +195,7 @@ class SocialNCE():
         sample_neg = torch.full((batch_size,max_neigh*self.agent_zone.shape[0],2), float("nan")).float()
         
         
-        # now let's make a loop over the scenes to get for each scene the positive sample and the M_i-1 negative ones 
+        # now let's make a loop over the scenes to get for each scene the positive sample and the (M_i-1)*9 negative ones 
         for i in range(batch_size):
             
             # batch_split[i] is the primary agent ID
@@ -257,11 +257,9 @@ class SocialNCE():
         # -----------------------------------------------------
         
         sample_pos[torch.isnan(sample_pos)] = -10.  # nans because of missing data
-        sample_neg[torch.isnan(sample_neg)] = -10.  # nans because of missing data or number of neigbhours < max number of neigbhours 
+        sample_neg[torch.isnan(sample_neg)] = -10.  # nans because of missing data or number of neigbhours < max number of neigbhours or if dist is out of the range [dmin, dmax]
         
-        # create a mask to ignore the nans... -->  mask_valid = (dist > self.min_seperation) & (dist < self.max_seperation)
-        
-        return sample_pos, sample_neg  #, mask_valid
+        return sample_pos, sample_neg 
 
 
     def _event_sampling(self, batch_scene, batch_split):
@@ -283,7 +281,7 @@ class SocialNCE():
         sample_neg = torch.full((batch_size, self.horizon, max_neigh*self.agent_zone.shape[0], 2), float("nan")).float() # [8, 4, 9*(M-1), 2]
 
 
-        # now let's make a loop over the scenes to get for each scene the positive sample and the M_i-1 negative ones
+        # now let's make a loop over the scenes to get for each scene the positive sample and the (M_i-1)*9 negative ones
         for i in range(batch_size):
 
             # batch_split[i] is the primary agent ID
@@ -313,10 +311,7 @@ class SocialNCE():
 
             sample_neg_scene = gt_future_neigbours[0:self.horizon]     # [4, M-1, 2]
             # need to reshape the tensor so that we have 9 negative samples in total around each sample seed [4 ,(M-1)*9, 2]
-            #print("sample_neg_scene", sample_neg_scene)
             sample_neg_scene = torch.repeat_interleave(sample_neg_scene, self.agent_zone.shape[0], dim=1)    # [4, (M-1)*9, 2]
-            #print("shape of gt_future_neigbours: ", gt_future_neigbours.shape)
-            #print("gt_future_neigbours", gt_future_neigbours)
             agent_zone = torch.cat([self.agent_zone]*gt_future_neigbours.shape[1])    # [(M-1)*9, 2]
             agent_zone = agent_zone[None, ...].repeat(self.horizon, 1, 1) # [ 9*(M-1), 2, 4]
             sample_neg_scene += agent_zone
@@ -348,10 +343,9 @@ class SocialNCE():
         # -----------------------------------------------------
 
         sample_pos[torch.isnan(sample_pos)] = -10.  # nans because of missing data
-        sample_neg[torch.isnan(sample_neg)] = -10.  # nans because of missing data or number of neigbhours < max number of neigbhours
+        sample_neg[torch.isnan(sample_neg)] = -10.  # nans because of missing data or number of neigbhours < max number of neigbhours or if dist is out of the range [dmin, dmax]
 
-        # create a mask to ignore the nans... -->  mask_valid = (dist > self.min_seperation) & (dist < self.max_seperation)
-        return sample_pos, sample_neg  #, mask_valid
+        return sample_pos, sample_neg 
 
 class EventEncoder(nn.Module):
     '''
