@@ -194,7 +194,7 @@ Since the D-Grid model yields better results, as shown in Milestone 1, it will b
 
 3. Results and Hyperparameter Fine-Tuning
 -----
-Trained models on synth_data and real_data were evaluated and submitted on the AICrowd Platform (https://www.aicrowd.com/challenges/trajnet-a-trajectory-forecasting-challenge/leaderboards)
+Trained models on synth_data and real_data were evaluated and submitted on the `AICrowd Platform <https://www.aicrowd.com/challenges/trajnet-a-trajectory-forecasting-challenge/leaderboards>`_
 
 **Attempt 1:**
 
