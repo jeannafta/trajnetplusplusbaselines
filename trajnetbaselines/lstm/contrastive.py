@@ -29,7 +29,7 @@ class SocialNCE():
         self.min_seperation = 0.2  # rho = minimum physical distance between two agents
         self.agent_zone = self.min_seperation * torch.tensor([[1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0], [0.707, 0.707], [0.707, -0.707], [-0.707, 0.707], [-0.707, -0.707], [0.0, 0.0]])   # delta s_p (ce sont des vecteurs de cos et sin d'où leurs valeurs entre 0 et 1) --> on obtient la zone confort des agents: les 8+1 points repésentent les points du cercle trigonométrique plus le centre du cercle. 
         
-        self.max_seperation = 5. # env-dependent parameter, diameter of agents (on met a "un certain nombre (0, -10 ou autre)" ceux qui son plus loins)
+        self.max_seperation = 5. # dmax
         
     def spatial(self, batch_scene, batch_split, batch_feat):
         '''
