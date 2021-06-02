@@ -252,11 +252,26 @@ Milestone 3 -
 |     NO               |    25    |          -          |       1e-3      |        SGAN         |     -         |      -    |           -            |  1.240|  5.610  |
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
 
-SGAN:
+**SGAN:**
+In this section, the sgan baseline was implemented in order to output multiple predictions (multimodality concept). 
+The following parameters were used: 
+* Learning rate = 1e-3
+* Epochs: 25
+* With Discriminator
 
-IMPROVEMENT OF EVENT SAMPLING:
+The following results were obtained:
+* FDE = 1.24
+* Col-1 = 5.61
+
+The trained model performed less better than the SocialNCE model. In case hyperparameters were changed, better results can be expected. We tried adding social loss to the SGAN Model however, it took very much to train. Therefore the code needs to be more optimized. 
+
+**IMPROVEMENT OF EVENT SAMPLING:**
 
 For this third milestone we wanted to improve our implementation of event sampling (see part 2.1.2). In our previous implementation, we calculated the query at time 0 of the prediction in batch feat, and we computed the similarity with the positive and negative samples generated at time 0, 1, ..., horizon (in the future). 
 Now we would like to give some additional information to calculate the loss more accurately. For this purpose, we decided to calculate the queries at each time t between 0 and pred_length-horizon, comparing them to the negative and positive samples generated at time t, t+1, ..., t+horizon-1 (see diagram below for the arrangement when calculating the similarities). With our parameters (horizon=4 and pred_lenth=12) we get 9 times more logits and therefore we gave more information about future good/bad events that could happen to the primary neighbor. This approach has allowed us to improve our results.
 
 .. figure:: docs/train/NEW.jpg
+
+=======
+Future Recommendations
+=======
