@@ -254,13 +254,13 @@ Milestone 3 -
 **SGAN:**
 In this section, the sgan baseline was implemented in order to output multiple predictions (multimodality concept). 
 The following parameters were used: 
-Learning rate = 1e-3
-Epochs: 25
-With Discriminator
+* Learning rate = 1e-3
+* Epochs: 25
+* With Discriminator
 
 The following results were obtained:
-FDE = 1.24
-Col-1 = 5.61
+* FDE = 1.24
+* Col-1 = 5.61
 
 The trained model performed less better than the SocialNCE model. In case hyperparameters were changed, better results can be expected. We tried adding social loss to the SGAN Model however, it took very much to train. Therefore the code needs to be more optimized. 
 
