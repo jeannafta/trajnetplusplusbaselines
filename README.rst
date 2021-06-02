@@ -252,13 +252,16 @@ Milestone 3 -
 
 
 **SGAN:**
+
 In this section, the sgan baseline was implemented in order to output multiple predictions (multimodality concept). 
 The following parameters were used: 
+
 * Learning rate = 1e-3
 * Epochs: 25
 * With Discriminator
 
 The following results were obtained:
+
 * FDE = 1.24
 * Col-1 = 5.61
 
