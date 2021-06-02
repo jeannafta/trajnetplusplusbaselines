@@ -26,7 +26,7 @@ Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
    
 .. figure:: docs/train/epoch-loss_goals-directionnal.JPG
    
-   As expected, the start loss for D-Grid model is lower than the Vanilla's. So, it is expected that the D-Grid Model will better predict trajectories (to be verified in 1.2)
+   As expected, the start loss for D-Grid model is lower than the Vanilla's. So, it is expected that the D-Grid Model will better predict trajectories (to be verified in 1.2).
    
 
    The above observation was also verified with another type of loss which is the sequential loss, as shown below:
@@ -46,11 +46,11 @@ Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
    
    .. figure:: docs/train/visualize_scene44259.JPG
    
-   We played with the training options to test whiche training was the best one and we chose the following 3 scenes:
+   We played with different interaction modules to identify the most performing one. The following scenes were chosen:
     
    .. figure:: docs/train/visualize_avec_tout_scene53383.JPG
    
-   This scene shows the superiority of all models over the vanilla model.  
+   This scene shows the superiority of all interaction models over the vanilla model.  
     
    .. figure:: docs/train/visualize_avec_tout_scene50782.JPG
    
@@ -60,7 +60,7 @@ Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
    
    However, this schene showed that in some cases, the directional MLP model behaves better than the directional LSTM. 
    
-   As for the results of each model: (from top to bottom: Directionalmlp, Occupancy, Directional, Vanilla)
+   As for the results of each model:
    
    .. figure:: docs/train/Results_new.JPG 
    
@@ -70,7 +70,7 @@ Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
     
     The final displacement error (FDE) is the distance between the predicted final destination and the true final destination at the end of the prediction period.
     
-   We can see that the directionnal have lower values for ADE and FDE than other models, this means that it must be usually the best one to approximate the groundtruth path. 
+   Using the directionnal grid interaction module, the lowest values of ADE and FDE were obtained when compared to all others models. This interaction module will be retained for the upcoming steps of the project. 
    
 2. Comparaison between Vanilla & D-Grid Model using synth_data & real_data
 -----
