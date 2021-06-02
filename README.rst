@@ -1,4 +1,5 @@
 TrajNet++ : The Trajectory Forecasting Framework
+================================================
 
 +-----------------------------+
 | **Group A**                 | 
@@ -11,8 +12,6 @@ TrajNet++ : The Trajectory Forecasting Framework
 +-----------------------------+ 
 
 AICrowd Team Name: CIVIL-459_GroupA
-
-================================================
 
 Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
 ==========
