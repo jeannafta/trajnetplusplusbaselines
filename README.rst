@@ -166,7 +166,7 @@ This sampling method consists in drawing negative samples based on regions of ot
    
 **2.2 Query**
    
-To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. Then a 2 layers MLP (Projection Head) encode the history observations into an 8-dimensional  embedding  vector.
+To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. Here we have chosen to keep only the first prediction (prediction at time 0 of the batch feat), for the calculation of the query, but this will be improved in milestone 3. Then a 2 layers MLP (Projection Head) was used to encode the history of observations into an 8-dimensional  embedding  vector.
    
 .. figure:: docs/train/Time.png
 
