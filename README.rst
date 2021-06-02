@@ -1,8 +1,4 @@
 TrajNet++ : The Trajectory Forecasting Framework
-================================================
-
-Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
-==========
 
 +-----------------------------+
 | **Group A**                 | 
@@ -15,6 +11,11 @@ Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
 +-----------------------------+ 
 
 AICrowd Team Name: CIVIL-459_GroupA
+
+================================================
+
+Milestone 1 - Setting Up TrajNet++ and training a D-LSTM model
+==========
 
 
 1. Comparaison between Vanilla, D-Grid, D-Grid MLP, D-Grid Occupancy on five_parallel_synth_data
