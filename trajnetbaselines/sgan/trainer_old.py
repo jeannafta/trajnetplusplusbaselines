@@ -29,14 +29,12 @@ from .. import __version__ as VERSION
 from ..lstm.utils import center_scene, random_rotation
 from ..lstm.data_load_utils import prepare_data
 
-from ..lstm.contrastive import SocialNCE, ProjHead, EventEncoder, SpatialEncoder
-from ..lstm.lstm import LSTM
 
 class Trainer(object):
-    def __init__(self, model=None, model_lstm=None, g_optimizer=None, g_lr_scheduler=None, d_optimizer=None,                            d_lr_scheduler=None, criterion=None, device=None, batch_size=8, obs_length=9, pred_length=12,                          augment=True, normalize_scene=False, save_every=1, start_length=0, val_flag=True,                                      projection_head=None, encoder_sample=None, contrast_weight=1.0, contrast_temperature=0.07,                            contrast_horizon=4, contrast_sampling='single'):
-        
+    def __init__(self, model=None, g_optimizer=None, g_lr_scheduler=None, d_optimizer=None, d_lr_scheduler=None,
+                 criterion=None, device=None, batch_size=8, obs_length=9, pred_length=12, augment=True,
+                 normalize_scene=False, save_every=1, start_length=0, val_flag=True):
         self.model = model if model is not None else SGAN()
-        self.model_lstm = model_lstm if model_lstm is not None else LSTM()
         self.g_optimizer = g_optimizer if g_optimizer is not None else torch.optim.Adam(
                            model.generator.parameters(), lr=1e-3, weight_decay=1e-4)
         self.d_optimizer = d_optimizer if d_optimizer is not None else torch.optim.Adam(
@@ -62,10 +60,6 @@ class Trainer(object):
         self.augment = augment
         self.normalize_scene = normalize_scene
 
-        self.contrastive = SocialNCE(obs_length, pred_length, projection_head, encoder_sample, contrast_temperature, contrast_horizon, contrast_sampling)
-        self.contrast_weight = contrast_weight
-        self.contrast_sampling = contrast_sampling
-        
         self.val_flag = val_flag
 
     def loop(self, train_scenes, val_scenes, train_goals, val_goals, out, epochs=35, start_epoch=0):
@@ -286,13 +280,9 @@ class Trainer(object):
         prediction_truth = batch_scene[self.obs_length:].clone()
         targets = batch_scene[self.obs_length:self.seq_length] - batch_scene[self.obs_length-1:self.seq_length-1]
 
-        # NEW: computation of batch_feat
-        _, _, batch_feat = self.model_lstm(observed, batch_scene_goal, batch_split, prediction_truth)
-        
         rel_output_list, outputs, scores_real, scores_fake = self.model(observed, batch_scene_goal, batch_split, prediction_truth,
                                                                         step_type=step_type, pred_length=self.pred_length)
-        loss = self.loss_criterion(rel_output_list, targets, batch_split, scores_fake, scores_real, step_type,
-                                  batch_scene, batch_feat)
+        loss = self.loss_criterion(rel_output_list, targets, batch_split, scores_fake, scores_real, step_type)
 
         if step_type == 'g':
             self.g_optimizer.zero_grad()
@@ -339,7 +329,7 @@ class Trainer(object):
 
         return 0.0, loss.item()
 
-    def loss_criterion(self, rel_output_list, targets, batch_split, scores_fake, scores_real, step_type, batch_scene, batch_feat):
+    def loss_criterion(self, rel_output_list, targets, batch_split, scores_fake, scores_real, step_type):
         """ Loss calculation function
 
         Parameters
@@ -371,9 +361,7 @@ class Trainer(object):
 
         else:
             ## top-k loss
-            
-            # NEW: we add the nce loss to the varierty loss 
-            loss = self.variety_loss(rel_output_list, targets, batch_split) + self.contrastive.event(batch_scene, batch_split, batch_feat)*self.contrast_weight
+            loss = self.variety_loss(rel_output_list, targets, batch_split)
 
             ## If discriminator used.
             if self.model.d_steps:
@@ -523,20 +511,6 @@ def main(epochs=25):
     hyperparameters.add_argument('--k', type=int, default=1,
                                  help='number of samples for variety loss')
 
-    # NEW: Social-NCE
-    hyperparameters.add_argument('--contrast_weight', default=0.0, type=float,
-                                 help='loss weight')
-    hyperparameters.add_argument('--contrast_temperature', default=0.07, type=float,
-                                 help='')
-    hyperparameters.add_argument('--contrast_sampling', type=str, default='single',
-                                 help='single, multi')
-    hyperparameters.add_argument('--contrast_horizon', default=4, type=int,
-                                 help='')
-    hyperparameters.add_argument('--contrast_pretrain', default=0, type=int,
-                                 help='number of epoch to pretrain contrastive heads')
-    hyperparameters.add_argument('--contrast_dim', default=8, type=int,
-                                 help='dimension of projected embedding')
-    
     args = parser.parse_args()
 
     ## Fixed set of scenes if sampling
@@ -630,23 +604,6 @@ def main(epochs=25):
     model = SGAN(generator=lstm_generator, discriminator=lstm_discriminator, g_steps=args.g_steps,
                  d_steps=args.d_steps, k=args.k)
 
-    
-    # lstm model 
-    model_lstm = LSTM(pool=pool,
-                 embedding_dim=args.coordinate_embedding_dim,
-                 hidden_dim=args.hidden_dim,
-                 goal_flag=args.goals,
-                 goal_dim=args.goal_dim)
-    
-    # social NCE
-    projection_head = ProjHead(feat_dim=args.hidden_dim, hidden_dim=args.contrast_dim*4, head_dim=args.contrast_dim)
-    if args.contrast_sampling == 'single':
-        encoder_sample = SpatialEncoder(hidden_dim=args.contrast_dim, head_dim=args.contrast_dim)
-    elif args.contrast_sampling == 'multi':
-        encoder_sample = EventEncoder(hidden_dim=args.contrast_dim, head_dim=args.contrast_dim)
-    else:
-        raise NotImplementedError
-    
     # Optimizer and Scheduler
     g_optimizer = torch.optim.Adam(model.generator.parameters(), lr=args.g_lr, weight_decay=1e-4)
     d_optimizer = torch.optim.Adam(model.discriminator.parameters(), lr=args.d_lr, weight_decay=1e-4)
@@ -685,8 +642,8 @@ def main(epochs=25):
     trainer = Trainer(model, g_optimizer=g_optimizer, g_lr_scheduler=g_lr_scheduler, d_optimizer=d_optimizer,
                       d_lr_scheduler=d_lr_scheduler, device=args.device, criterion=criterion,
                       batch_size=args.batch_size, obs_length=args.obs_length, pred_length=args.pred_length,
-                      augment=args.augment, normalize_scene=args.normalize_scene, save_every=args.save_every,start_length=args.start_length,val_flag=val_flag,model_lstm=model_lstm,projection_head=projection_head,encoder_sample=encoder_sample,contrast_weight=args.contrast_weight,contrast_temperature=args.contrast_temperature,contrast_horizon=args.contrast_horizon,contrast_sampling=args.contrast_sampling)
-    
+                      augment=args.augment, normalize_scene=args.normalize_scene, save_every=args.save_every,
+                      start_length=args.start_length, val_flag=val_flag)
     trainer.loop(train_scenes, val_scenes, train_goals, val_goals, args.output, epochs=args.epochs, start_epoch=start_epoch)
 
 

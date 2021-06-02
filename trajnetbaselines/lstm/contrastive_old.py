@@ -129,51 +129,42 @@ class SocialNCE():
         # -----------------------------------------------------
 
         #event_sampling
-        sample_pos, sample_neg = self._event_sampling(batch_scene, batch_split) # (8, 12, 2) and (8, 12, 9*(M-1), 2)
+        sample_pos, sample_neg = self._event_sampling(batch_scene, batch_split) # (8, 4, 2) and (8, 4, 9*(M-1), 2)
 
         # -----------------------------------------------------
         #              Lower-dimensional Embedding
         # -----------------------------------------------------
 
-        ###########################################################################################################
-        # Here we will test another way to compute the logits (we compute the query for 8 time steps in the future)
-        ###########################################################################################################
-        
         # compute query
-        emb_obsv = self.head_projection(batch_feat[:self.pred_length-self.horizon+1, primary_agents_ID, :])     # [9, 8, 128] --> psy --> [9, 8, 8]
-        query = nn.functional.normalize(emb_obsv, dim=2)      # [9, 8, 8] [time, batch, hidden_dim]
-        query = torch.repeat_interleave(query, repeats=self.horizon, dim=0)  # [4*9, 8, 8]
-        query = query.permute(1, 0, 2) # [8, 4*9, 8]
-        
+        emb_obsv = self.head_projection(batch_feat[0, primary_agents_ID, :])     # [1, 8, 128] --> psy --> [1, 8, 8]
+        query = nn.functional.normalize(emb_obsv, dim=1)                         # [1, 8, 8]
+        query = query[None, ...].repeat(self.horizon, 1, 1) # [4, 8, 8]
+        query = query.permute(1, 0, 2) # [8, 4, 8]
+
         #compute time_pos and time_neg
-        time_pos = (torch.ones(sample_pos.size(0))[:, None] * (torch.arange(self.pred_length) - (self.pred_length-1)*(0.5))[None, :]) # (num_scene, pred_length) [8, 12]
-        time_neg = (torch.ones(sample_neg.size(0), sample_neg.size(2))[:, None, :] * (torch.arange(self.pred_length) - (self.pred_length-1)*(0.5))[None, :, None]) # (num_scene, pred_length, 9*(M-1)) [8, 12, 9*(M-1)]
+        time_pos = (torch.ones(sample_pos.size(0))[:, None] * (torch.arange(self.horizon) - (self.horizon-1)*(0.5))[None, :]) # (num_scene, horizon) [8, 4]
+        time_neg = (torch.ones(sample_neg.size(0), sample_neg.size(2))[:, None, :] * (torch.arange(self.horizon) - (self.horizon-1)*(0.5))[None, :, None]) # (num_scene, horizon, 9*(M-1)) [8, 4, 9*(M-1)]
 
         # compute keys
-        emb_pos = self.encoder_sample(sample_pos, time_pos[:,:,None])   # (num_scene, horizon, head_dim) [8, 12, 8]
-        emb_neg = self.encoder_sample(sample_neg, time_neg[:,:,:,None])   # (num_scene, horizon, num_neighbors*9, head_dim) [8, 12, (M-1)*9, 8]
+        emb_pos = self.encoder_sample(sample_pos, time_pos[:,:,None])   # (num_scene, horizon, head_dim) [8, 4, 8]
+        emb_neg = self.encoder_sample(sample_neg, time_neg[:,:,:,None])   # (num_scene, horizon, num_neighbors*9, head_dim) [8, 4, (M-1)*9, 8]
 
-        key_pos = nn.functional.normalize(emb_pos, dim=2)  # [8, 12, 8]
-        key_neg = nn.functional.normalize(emb_neg, dim=3)  # [8, 12, (M-1)*9, 8]
-        
-        # now we want to apply the new idea of Liu (explain the idea here)
-        indices = get_indices(self.horizon, self.pred_length)
-        key_pos_sim = key_pos[:, indices, :]  # [8, 36, 8]
-        key_neg_sim = key_neg[:, indices, :, :]  # [8, 36, (M-1)*9, 8]
-        
+        key_pos = nn.functional.normalize(emb_pos, dim=2)  # [8, 4, 8]
+        key_neg = nn.functional.normalize(emb_neg, dim=3)  # [8, 4, (M-1)*9, 8]
+
         # -----------------------------------------------------
         #                   Compute Similarity
         # -----------------------------------------------------
-        
-        sim_pos = (query * key_pos_sim).sum(dim=2)  # [8, 36]
-        sim_neg = (query[:, :, None, :] * key_neg_sim).sum(dim=3) # [8, 36, 9*(M-1)]
-        
+
+        sim_pos = (query * key_pos).sum(dim=2)  # [8, 4]
+        sim_neg = (query[:, :, None, :] * key_neg).sum(dim=3) # [8, 4, 9*(M-1)]
+
         # -----------------------------------------------------
         #                       NCE Loss
         # -----------------------------------------------------
-        flat_pos = sim_pos.view(-1).unsqueeze(1) # [288, 1]
-        flat_neg = sim_neg.view(sim_neg.size(0)*sim_neg.size(1), -1) # [288, 9*(M-1)]
-        
+        flat_pos = sim_pos.view(-1).unsqueeze(1) # [32, 1]
+        flat_neg = sim_neg.view(sim_neg.size(0), -1).repeat_interleave(self.horizon, dim=0) # [32, 180]
+
         # logits
         logits = torch.cat([flat_pos, flat_neg], dim=1) / self.temperature  # to obtain the logit vector of slide 89 (Lecture 8)
 
@@ -286,8 +277,8 @@ class SocialNCE():
             max_neigh = max(max_neigh, batch_split[i+1]-(batch_split[i]+1))
 
         # initialize sample_pos, sample_neg
-        sample_pos = torch.full((batch_size, self.pred_length, 2), float("nan")).float() # [8, 12, 2]
-        sample_neg = torch.full((batch_size, self.pred_length, max_neigh*self.agent_zone.shape[0], 2), float("nan")).float() # [8, 12, 9*(M-1), 2]
+        sample_pos = torch.full((batch_size, self.horizon, 2), float("nan")).float() # [8, 4, 2]
+        sample_neg = torch.full((batch_size, self.horizon, max_neigh*self.agent_zone.shape[0], 2), float("nan")).float() # [8, 4, 9*(M-1), 2]
 
 
         # now let's make a loop over the scenes to get for each scene the positive sample and the (M_i-1)*9 negative ones
@@ -311,18 +302,18 @@ class SocialNCE():
         # -----------------------------------------------------
 
 
-            sample_pos_scene = gt_future_primary[0:self.pred_length]          # [12, 2]  vector of dimention [4,2] which gives the position of the positive sample
+            sample_pos_scene = gt_future_primary[0:self.horizon]          # [4, 2]  vector of dimention [4,2] which gives the position of the positive sample
             sample_pos_scene += torch.randn(size=sample_pos_scene.size()) * self.noise_local   # [4, 2]
 
         # -----------------------------------------------------
         #                  Negative Samples
         # -----------------------------------------------------
 
-            sample_neg_scene = gt_future_neigbours[0:self.pred_length]     # [12, M-1, 2]
+            sample_neg_scene = gt_future_neigbours[0:self.horizon]     # [4, M-1, 2]
             # need to reshape the tensor so that we have 9 negative samples in total around each sample seed [4 ,(M-1)*9, 2]
             sample_neg_scene = torch.repeat_interleave(sample_neg_scene, self.agent_zone.shape[0], dim=1)    # [4, (M-1)*9, 2]
             agent_zone = torch.cat([self.agent_zone]*gt_future_neigbours.shape[1])    # [(M-1)*9, 2]
-            agent_zone = agent_zone[None, ...].repeat(self.pred_length, 1, 1) # [ 9*(M-1), 2, 4]
+            agent_zone = agent_zone[None, ...].repeat(self.horizon, 1, 1) # [ 9*(M-1), 2, 4]
             sample_neg_scene += agent_zone
             sample_neg_scene += torch.randn(size=sample_neg_scene.size()) * self.noise_local     # [4, (M-1)*9, 2]
 
@@ -460,9 +451,3 @@ def plot_samples(primary, neighbor, fname, sample_pos_scene, sample_neg_scene, o
     plt.grid()
     plt.savefig(fname, bbox_inches='tight', pad_inches=0)
     plt.close(fig)
-
-def get_indices(horizon, pred_length):
-    liste = list(range(horizon))*(pred_length-horizon+1)
-    for index in range(len(liste)):
-        liste[index]+=math.floor(index/horizon)
-    return liste 
