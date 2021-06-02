@@ -271,6 +271,3 @@ Now we would like to give some additional information to calculate the loss more
 
 .. figure:: docs/train/NEW.jpg
 
-=======
-Future Recommendations
-=======
