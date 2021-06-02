@@ -226,6 +226,8 @@ Obtained results:
 Milestone 3 - 
 ==========
 
+In this milestone, we played with the parameters in order to boost the performance of the model:
+
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
 |**Used milestone 1 ?**|**Epochs**|**Contrast weight λ**|**Learning Rate**|**Contrast Sampling**|**Temperature**|**Horizon**|**Noise augmentation ?**|**FDE**|**COL-I**|
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
@@ -246,6 +248,7 @@ Milestone 3 -
 |     YES-25epochs     |    5     |          15.0       |       5e-4      |         Multi       |      0.1      |      4    |           YES          |  1.230|  5.970  |
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
 
+Adding noise in addition to contrast weights of 0.1 & 10 were found to be useful to improve the performance of the model. 
 
 
 **SGAN:**
@@ -272,6 +275,7 @@ Now we would like to give some additional information to calculate the loss more
 .. figure:: docs/train/NEW.jpg
 
 This approach has allowed us to improve our results:
+
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
 |**Used milestone 1 ?**|**Epochs**|**Contrast weight λ**|**Learning Rate**|**Contrast Sampling**|**Temperature**|**Horizon**|**Noise augmentation ?**|**FDE**|**COL-I**|
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
