@@ -101,20 +101,14 @@ We can look at theses two images and see some terms evaluating the models.
     The top3_FDE. Given 3 output predictions, the metrics calculate the FDE of the prediction closest to the groundtruth trajectory.
 
 
-Considering this, we can see interesant things:
-  The Pred. Collision and the GT Collision is lower for our trained model than for the Vanilla one, this was expected.
-  
-  We can see that ADE and FDE are only a little bit lowe, this is not that good, it means that the submitted model is not that much better than the Vanilla one considering trajectory predictions.
-  
-
-If we look the exemple we saw on the course the legend was correct and the tested model is much better than the Vanilla one in every sections except GT Collision:
+  It was observed that Pred. Collision and GT Collision are lower for the trained models considering interactions than for the Vanilla one. This is explained by the fact that the vanilla model does not take into account intercations between the different pedestrians of the scenes which will result in less accurate predictions.
 
 .. figure:: docs/train/UNIMODAL_MULTIMODAL_ex_du_cours.JPG
 
 
-3. Retraining using CFF datas
+3. Training using CFF datas
 -----
-We tried to use all the data set including cff datas to train our model, the induced model is not as good as before. The trained model without cff data is better. There can be multiple reasons to this, but the main one is that cff data were too noisy and so it's lowering the model training performances. The final difference between the two models is not that high because having more data is a good thing overall, so it lowers the bad impact of the noisy datas.
+We tried to use all the data set including cff datas to train our model, the obtained model did not perform as good as the previous model. TThis is mainly explained by the fact that CFF data are noisy, which drives the model to underperform. The final difference between the two models is not that high because having more data is a good thing overall, so it lowers the bad impact of the noisy data.
 
 ================================================
 
