@@ -197,7 +197,7 @@ Since the D-Grid model yields better results, as shown in Milestone 1, it will b
 -----
 Trained models on synth_data and real_data were evaluated and submitted on the `AICrowd Platform <https://www.aicrowd.com/challenges/trajnet-a-trajectory-forecasting-challenge/leaderboards>`_
 
-**Attempt 1:**
+**Best Attempt :**
 
 +-----------------------------+-----------------------------+
 | **Hyperparamter**           |        **Value**            |
@@ -215,9 +215,9 @@ Trained models on synth_data and real_data were evaluated and submitted on the `
        
 Obtained results:
 
-FDE: 1.190
+* FDE: 1.190
 
-COL-I: 4.830
+* COL-I: 4.830
 
 .. figure:: docs/train/summary.png
 
@@ -245,10 +245,7 @@ Milestone 3 -
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
 |     YES-25epochs     |    5     |          15.0       |       5e-4      |         Multi       |      0.1      |      4    |           YES          |  1.230|  5.970  |
 +----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
-|     YES-25epochs     |    15    |          0.1        |       1e-3      |         Multi       |      0.1      |      4    |           YES          |  1.180|  5.790  |
-+----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
-|     YES-25epochs     |    15    |          15.0       |       1e-3      |         Multi       |      0.1      |      4    |           YES          |  1.210|  4.710  |
-+----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
+
 
 
 **SGAN:**
@@ -270,7 +267,19 @@ The trained model performed less better than the SocialNCE model. In case hyperp
 **IMPROVEMENT OF EVENT SAMPLING:**
 
 For this third milestone we wanted to improve our implementation of event sampling (see part 2.1.2). In our previous implementation, we calculated the query at time 0 of the prediction in batch feat, and we computed the similarity with the positive and negative samples generated at time 0, 1, ..., horizon (in the future). 
-Now we would like to give some additional information to calculate the loss more accurately. For this purpose, we decided to calculate the queries at each time t between 0 and pred_length-horizon, comparing them to the negative and positive samples generated at time t, t+1, ..., t+horizon-1 (see diagram below for the arrangement when calculating the similarities). With our parameters (horizon=4 and pred_lenth=12) we get 9 times more logits and therefore we gave more information about future good/bad events that could happen to the primary neighbor. This approach has allowed us to improve our results.
+Now we would like to give some additional information to calculate the loss more accurately. For this purpose, we decided to calculate the queries at each time t between 0 and pred_length-horizon, comparing them to the negative and positive samples generated at time t, t+1, ..., t+horizon-1 (see diagram below for the arrangement when calculating the similarities). With our parameters (horizon=4 and pred_lenth=12) we get 9 times more logits and therefore we gave more information about future good/bad events that could happen to the primary neighbor. 
 
 .. figure:: docs/train/NEW.jpg
 
+This approach has allowed us to improve our results:
++----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
+|**Used milestone 1 ?**|**Epochs**|**Contrast weight λ**|**Learning Rate**|**Contrast Sampling**|**Temperature**|**Horizon**|**Noise augmentation ?**|**FDE**|**COL-I**|
++----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
+|     YES-25epochs     |    15    |          0.1        |       1e-3      |         Multi       |      0.1      |      4    |           YES          |  1.180|  5.790  |
++----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
+|     YES-25epochs     |    15    |          10.0       |       1e-3      |         Multi       |      0.1      |      4    |           YES          |  1.210|  4.710  |
++----------------------+----------+---------------------+-----------------+---------------------+---------------+-----------+------------------------+-------+---------+
+
+With λ = 0.1, the smallest FDE of 1.18 was obtained and,
+
+using λ = 10, the smallest COL-1 of 4.71 was obtained
