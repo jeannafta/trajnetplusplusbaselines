@@ -119,6 +119,7 @@ Milestone 2 - Implementing Social Contrastive Learning
 -----
 
 **1.1 Problem Statement**
+
 So far, the trained model is not socially aware, meaning that it is not able to differentiate between socially acceptable behaviors and what is not. However, how can the model differentiate between the two and avoid socially unfavorable events such as collisions, when these scenarios rarely happen in real life and are almost completey absent in real data? 
 Based on this idea, the concept of social contrastive learning was created, and will be implemented as part of this milestone. 
 
@@ -139,9 +140,9 @@ Eventhough several sampling strategies exist, only two were implemented within t
      
      2.1.1 Spatial sampling
      
-This method consists in drawing negative samples based on locations of neighbouring agents at a fixed time step. From this position, 8 more positions are generated in such a way to form a circle around the actual position. In total, 9 negative samples are generated per agent and some noise was also added to leave some room for error. One of the many challenges encountered to accomplish this task was the variability of neighbors in each scene. To deal with that, a NaN tensor was created having of its dimension equal to the maximal number of neighbors in that particular batch, and another of its dimensions equal to the number of scenes in the batch (1 batch contains 8 scenes). Negative samples were then generated and replaced the NaN values when possible. However, some NaN values were still present in the negative samples when the number of neighbors in that scene is less than the maximum number of neighbors. Once the negative data generated, some values were considered easy if they were too far from the primary agent and too hard if they were too close. If the distance between the agent of interest and its neighbors i.e., distance between negative and positive data was smaller than a minimum separation and larger than a maximum separation, the coordinates of these specific locations were set to NaN. Another source of NaN values is missing values from the data itself. 
+This method consists in drawing negative samples based on locations of neighbouring agents at a fixed time step. From this position, 8 more positions are generated in such a way to form a circle around the actual position. In total, 9 negative samples are generated per agent and some noise was also added to leave some room for error. One of the many challenges encountered to accomplish this task was the variability of neighbors in each scene. To deal with that, a NaN tensor was created having one of its dimensions equal to the maximum number of neighbors in that particular batch, and another of its dimensions equal to the number of scenes in the batch (1 batch contains 8 scenes). Negative samples were then generated and replaced the NaN values when possible. However, some NaN values were still present in the negative samples when the number of neighbors in that scene is less than the maximum number of neighbors. Once the negative data generated, some values were considered easy if they were too far from the primary agent and too hard if they were too close. If the distance between the agent of interest and its neighbors i.e., distance between negative and positive data was smaller than a minimum separation and larger than a maximum separation, the coordinates of these specific locations were set to NaN. Another source of NaN values is missing values from the data itself. 
 The NaN values were then replaced by -10 meaning that this agent is far from the primary agent and therefore is not of interest. 
-Another crucial step of that process, was to decide on a step time within the sampling horizon. For a sampling horizon equal to 4, the time step before the last i.e. t=3 was  "yields significant performance gains on both reward and collision metrics" `(Liu, Y., et al.) <https://arxiv.org/pdf/2012.11717.pdf>`_ 
+Another crucial step of that process, was to decide on a step time within the sampling horizon. For a sampling horizon equal to 4, the time step before the last i.e. t=3  "yields significant performance gains on both reward and collision metrics" `(Liu, Y., et al.) <https://arxiv.org/pdf/2012.11717.pdf>`_ .
 Positive samples correspond to the groundthruth of primary agent at a specific time with some noise added to it. 
      
   Negative and positive data were visualized:
@@ -156,17 +157,17 @@ Samples with NaN data were replaced with -10 as can be seen in Figure below:
       
       2.1.2 Event sampling
      
-This sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon. 
+This sampling method consists in drawing negative samples based on regions of other agents across multiple time steps. This means that it is close to the Social sampling but multiple time steps are considered, meaning the entire sampling horizon steps. 
    
 **2.2 Query**
    
-To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. Here we have chosen to keep only the first prediction (prediction at time 0 of the batch feat), for the calculation of the query, but this will be improved in milestone 3. Then a 2 layers MLP (Projection Head) was used to encode the history of observations into an 8-dimensional  embedding  vector.
+To accurately predict the trajectory of the primary agent, some important features need to be learnt from the history of the primary agent. A batch feat was generated from 9 previous observations. Here we have chosen to keep only the first prediction (prediction at time 0 of the batch feat), for the calculation of the query, but this will be improved in milestone 3. 
    
 .. figure:: docs/train/Time.png
 
 **2.3 Embedding**
 
-Once the query, positive and negative data were obtained, they were embedded in the space and normalized across the features dimension. 
+A 2 layer MLP (Projection Head) was used to encode the history of observations into an 8-dimensional  embedding  vector. Positive and negative samples were also embedded in the same space using spatial or event encoder. Then the embedded vectors were normalized across the features dimension. 
 
 
 **2.4 Similarity**
@@ -175,11 +176,11 @@ This task is established in order to maximize similarity between the extracted m
 
 **2.5 Loss**
 
-Loss is computed between the logits and labels. Labels were drawn from the data itself (Self-supervised Learning). An NCE Loss is generated then given a certain weight λ (hyperparameter to be fine-tuned while training) and then added to the basic loss. 
+Loss is computed between the logits and labels. An NCE Loss is then generated given a certain weight λ (hyperparameter to be fine-tuned while training) and then added to the basic loss. 
 
 **2.6 Settings & Training**
 
-Given 9 time steps of observations as imput, we want to predict future trajectories for 12 time steps for the primary agent.
+Given 9 time steps of observations as input, we want to predict future trajectories for 12 time steps for the primary agent.
 As in milestone 1, we will compare the models performances with reference to FDE (Final Displacement Error) and COL-1 (collision rate).
 
 All models will be trained using Adam optimizer.
@@ -259,7 +260,7 @@ The following results were obtained:
 * FDE = 1.24
 * Col-1 = 5.61
 
-The trained model performed less better than the SocialNCE model. In case hyperparameters were changed, better results can be expected. We tried adding social loss to the SGAN Model however, it took very much to train. Therefore the code needs to be more optimized. 
+The trained model performed less better than the SocialNCE model. In case hyperparameters were changed, better results can be expected. We tried adding social loss to the SGAN Model however, it took very much to train. Therefore the code needs to be more optimized (future work). 
 
 **IMPROVEMENT OF EVENT SAMPLING:**
 
@@ -281,3 +282,5 @@ This approach has allowed us to improve our results:
 With λ = 0.1, the smallest FDE of 1.18 was obtained and,
 
 using λ = 10, the smallest COL-1 of 4.71 was obtained
+
+At the end, our best obtained model used interaction modules and contrastive learning. The method implemented in milestone 3 combined with event sampling have given the best results. 
