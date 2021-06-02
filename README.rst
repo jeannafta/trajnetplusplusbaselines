@@ -250,4 +250,4 @@ SGAN:
 
 IMPROVEMENT OF EVENT SAMPLING:
 
-.. figure:: docs/train/NEW.png
+.. figure:: docs/train/NEW.jpg
