@@ -9,25 +9,25 @@ class SocialNCE():
     def __init__(self, obs_length, pred_length, head_projection, encoder_sample, temperature, horizon, sampling):  # ENCODER SAMPLE: python -m trajnetbaselines.lstm.trainer --path synth_data --type 'directional' --goals --augment --contrast_weight 1
                                                                                                                    # EVENT ENCODER: python -m trajnetbaselines.lstm.trainer --path synth_data --type 'directional' --goals --augment --contrast_weight 1 --contrast_sampling "multi"
         # problem setting
-        self.obs_length = obs_length     #  9 by default  (nombre de time steps d'observation) 
-        self.pred_length = pred_length   # 12 by default  (nombre de time steps de prédiction) 
+        self.obs_length = obs_length     #  9 by default  (number of observation time steps) 
+        self.pred_length = pred_length   # 12 by default  (number of prediction time steps) 
 
         # nce models
-        self.head_projection = head_projection   # psi (projection  head: instance de la classe ProjHead)
-        self.encoder_sample = encoder_sample     # phi (le space encoder ou le event encoder: instances de la classe EventEncoder ou SpatialEncoder)
+        self.head_projection = head_projection   # psi (projection  head: instance of the class ProjHead)
+        self.encoder_sample = encoder_sample     # phi (space encoder or event encoder: instances of classes EventEncoder or SpatialEncoder)
 
         # nce loss
         self.criterion = nn.CrossEntropyLoss()
 
         # nce param
         self.temperature = temperature   # 0.07 by default
-        self.horizon = horizon   # 4 time steps delta_t après le temps t
+        self.horizon = horizon   # 4 
 
         # sampling param
         self.sampling = sampling
         self.noise_local = 0.1  # noise epsilon 
         self.min_seperation = 0.2  # rho = minimum physical distance between two agents
-        self.agent_zone = self.min_seperation * torch.tensor([[1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0], [0.707, 0.707], [0.707, -0.707], [-0.707, 0.707], [-0.707, -0.707], [0.0, 0.0]])   # delta s_p (ce sont des vecteurs de cos et sin d'où leurs valeurs entre 0 et 1) --> on obtient la zone confort des agents: les 8+1 points repésentent les points du cercle trigonométrique plus le centre du cercle. 
+        self.agent_zone = self.min_seperation * torch.tensor([[1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0], [0.707, 0.707], [0.707, -0.707], [-0.707, 0.707], [-0.707, -0.707], [0.0, 0.0]])   # we obtain the comfort zone of the agents: the 8+1 points represent points of the trigonometric circle + center of the circle. 
         
         self.max_seperation = 5. # dmax
         
@@ -82,7 +82,7 @@ class SocialNCE():
         #              Lower-dimensional Embedding 
         # -----------------------------------------------------
 
-        # compute query
+        # compute query (old method of milestone 2)
         emb_obsv = self.head_projection(batch_feat[0, primary_agents_ID, :])     # [8, 128] --> psy --> [8, 8]
         query = nn.functional.normalize(emb_obsv, dim=1)                         # [8, 8]
         
@@ -97,15 +97,14 @@ class SocialNCE():
         #                   Compute Similarity 
         # -----------------------------------------------------
 
-        sim_pos = (query * key_pos).sum(dim=1)  # we keep the batch dimention [8]
-        sim_neg = (query[:, None, :] * key_neg).sum(dim=2)     # we keep the batch dimention and the number of comparison between query and negative sample [8, (M-1)*9]
+        sim_pos = (query * key_pos).sum(dim=1)  # [8]
+        sim_neg = (query[:, None, :] * key_neg).sum(dim=2)     # [8, (M-1)*9]
         
         # -----------------------------------------------------
         #                       NCE Loss 
         # -----------------------------------------------------
         
         # logits
-        # logits = (torch.cat([flat_pos, flat_neg], dim=1) / self.temperature)[mask_pos[mask_valid].view(-1)]
         logits = torch.cat([sim_pos.unsqueeze(1), sim_neg], dim=1) / self.temperature  # to obtain the logit vector of slide 89 (Lecture 8)
         
         labels = torch.zeros(logits.size(0), dtype=torch.long)
@@ -134,12 +133,8 @@ class SocialNCE():
         # -----------------------------------------------------
         #              Lower-dimensional Embedding
         # -----------------------------------------------------
-
-        ###########################################################################################################
-        # Here we will test another way to compute the logits (we compute the query for 8 time steps in the future)
-        ###########################################################################################################
         
-        # compute query
+        # compute query (new method explained in the milestone 3 part of the ReadMe)
         emb_obsv = self.head_projection(batch_feat[:self.pred_length-self.horizon+1, primary_agents_ID, :])     # [9, 8, 128] --> psy --> [9, 8, 8]
         query = nn.functional.normalize(emb_obsv, dim=2)      # [9, 8, 8] [time, batch, hidden_dim]
         query = torch.repeat_interleave(query, repeats=self.horizon, dim=0)  # [4*9, 8, 8]
@@ -156,7 +151,7 @@ class SocialNCE():
         key_pos = nn.functional.normalize(emb_pos, dim=2)  # [8, 12, 8]
         key_neg = nn.functional.normalize(emb_neg, dim=3)  # [8, 12, (M-1)*9, 8]
         
-        # now we want to apply the new idea of Liu (explain the idea here)
+        # we call the get_indices function to get the indices in the right order to compute similarities 
         indices = get_indices(self.horizon, self.pred_length)
         key_pos_sim = key_pos[:, indices, :]  # [8, 36, 8]
         key_neg_sim = key_neg[:, indices, :, :]  # [8, 36, (M-1)*9, 8]
@@ -193,7 +188,7 @@ class SocialNCE():
 
         batch_size = batch_split.shape[0] - 1
         
-        # first we need to find the scene which has the maximum number of neigbours so that we can return at the end of the function a tensor which contains the negative samples of all the scenes although the scenes of the batch hasn't the same number of neigbhours (if a scene has a number of neigbours lower than the maximum number of neigbours then we will fill the missing values with Nans)
+        # first we need to find the scene which has the maximum number of neigbours so that we can return at the end of the function a tensor which contains the negative samples of all the scenes although the scenes of the batch don't have the same number of neigbhours (if a scene has a number of neigbours lower than the maximum number of neigbours then we will fill the missing values with Nans)
         
         max_neigh = 0
         for i in range(batch_split.shape[0] - 1):
@@ -280,7 +275,7 @@ class SocialNCE():
 
         batch_size = batch_split.shape[0] - 1
 
-        # first we need to find the scene which has the maximum number of neigbours so that we can return at the end of the function a tensor which contains the negative samples of all the scenes although the scenes of the batch hasn't >
+         # first we need to find the scene which has the maximum number of neigbours so that we can return at the end of the function a tensor which contains the negative samples of all the scenes although the scenes of the batch don't have the same number of neigbhours (if a scene has a number of neigbours lower than the maximum number of neigbours then we will fill the missing values with Nans)
         max_neigh = 0
         for i in range(batch_split.shape[0] - 1):
             max_neigh = max(max_neigh, batch_split[i+1]-(batch_split[i]+1))
@@ -462,6 +457,9 @@ def plot_samples(primary, neighbor, fname, sample_pos_scene, sample_neg_scene, o
     plt.close(fig)
 
 def get_indices(horizon, pred_length):
+    '''
+    Get the indices for improved technique of milestone 3
+    '''
     liste = list(range(horizon))*(pred_length-horizon+1)
     for index in range(len(liste)):
         liste[index]+=math.floor(index/horizon)
